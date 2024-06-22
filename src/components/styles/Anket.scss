@@ -1,0 +1,46 @@
+.section2 {
+  
+    position: relative;
+  
+    // Переменные цветов
+    $topColor: #fff; // Серый цвет
+    $bottomColor: #F3F4FE; // Белый цвет
+  
+    // Создание градиента с помощью линейного градиента
+    background: linear-gradient(to bottom, $topColor 50%, $bottomColor 50%);
+    .flex-row {
+      display: flex;
+      align-items: flex-start;
+    }
+  
+    .vertical-line {
+      width: 10px;
+      background-color: #000;
+      height: 600px;
+      margin: 40px 20px 0px 20px;
+      display: block;
+    }
+  
+    
+  
+    .w-192 {
+      width: 24rem; // 192px * 2 = 384px
+    }
+  
+    .mt-12 {
+      margin-top: 50px; // Adding a top margin of 50px
+    }
+  
+    .section {
+      padding: 20px; // Adjust the padding to make the section smaller
+    }
+  
+    .bg-gray-100 {
+      min-height: auto; // Remove minimum height to make the section smaller
+    }
+
+    .bg{
+      
+    }
+  }
+  

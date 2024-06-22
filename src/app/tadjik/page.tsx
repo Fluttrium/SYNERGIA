@@ -1,0 +1,16 @@
+import Tadjik from "@/components/Tadjik";
+import Uzbek from "@/components/Uzbek";
+import About2 from "@/components/about2";
+import AboutTown from "@/components/abouttown";
+import Table from "@/components/tables";
+import Towns from "@/components/tables";
+
+export const metadata = {
+  title: "Home - Open PRO",
+  description: "Page description",
+};
+export default function Home() {
+  return <>
+  <Tadjik/>
+  </>;
+}

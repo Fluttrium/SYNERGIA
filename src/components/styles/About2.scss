@@ -1,0 +1,34 @@
+.image-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px; // Пространство между изображениями
+  
+  .image-container {
+    flex: 1; // Изображения занимают всю доступную ширину
+    margin-bottom: 8px; // Дополнительный отступ снизу
+  
+    img {
+      width: 100%; // Изображения занимают всю ширину родительского контейнера
+      border-radius: 8px; // Закругление углов
+      transition: transform 0.3s ease; // Плавное изменение масштаба при наведении
+    }
+  }
+}
+
+// Медиа-запросы для различных размеров экранов
+@media (min-width: 768px) {
+  .image-grid {
+    flex-direction: row; // Изображения отображаются в ряд на планшетах и ноутбуках
+  }
+}
+
+@media (max-width: 767px) {
+  .image-grid {
+    flex-direction: column; // Изображения отображаются в колонке на телефонах
+    justify-content: center; // Центрирование по вертикали
+    
+    .image-container {
+      width: 100%; // Ширина изображений на телефонах
+    }
+  }
+}

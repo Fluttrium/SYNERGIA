@@ -1,0 +1,34 @@
+.relative{
+    background-color: #ffffff; // Цвет фона
+  border-radius: 10px; // Радиус скругления углов
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Тень
+}
+
+.ud-submenu {
+  background-color: #ffffff; // Цвет фона
+  border-radius: 10px; // Радиус скругления углов
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Тень
+
+  ul {
+    list-style-type: none; // Убираем маркеры списка
+    padding: 0; // Убираем внутренние отступы
+  }
+
+  li {
+    padding: 10px 20px; // Отступы внутри элементов списка
+    transition: background-color 0.3s ease; // Плавное изменение цвета фона при наведении
+
+    &:hover {
+      background-color: #f2f2f2; // Цвет фона при наведении
+    }
+
+    a {
+      color: #333333; // Цвет текста ссылки
+      text-decoration: none; // Убираем подчеркивание
+
+      &:hover {
+        color: #0066cc; // Цвет текста ссылки при наведении
+      }
+    }
+  }
+}
