@@ -21,38 +21,17 @@ const Form: React.FC = () => {
 
   return (
     <section className="section flex justify-center">
-      <div className="flex flex-col md:flex-row z-1 w-full">
-        {/* Contact Information - Hidden on small screens */}
-        <div className="hidden md:flex flex-col md:flex-row items-center md:items-start mt-20 mx-4 md:mx-0 md:ml-40 md:mr-auto">
-          <div className="container w-full md:w-max rounded flex-col">
-            <div className="m-9 text-5xl text-center md:text-left">
-              Свяжитесь с нами
-            </div>
-            <div className="flex flex-row m-9 md:pt-14 space-x-10">
-              <div className="container flex flex-col">
-                <p className="text-xl pb-3">Наше расположение</p>
-                <p>улица Славянская, дом 3</p>
-              </div>
-              <div className="container flex flex-col">
-                <div className="container flex flex-col">
-                  <p className="text-xl pb-3">Как мы можем помочь?</p>
-                  <p>fond.synergy@mail.ru</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="flex flex-col items-center w-full">
+        {/* Contact Information */}
         {/* Form */}
-        <div className="flex justify-center items-center py-28 w-full">
-          <div className="bg-white drop-shadow-lg container w-max rounded py-8 mx-auto">
+        <div className="flex justify-center items-center py-8 w-full">
+          <div className="bg-white drop-shadow-lg container w-max rounded py-2 mx-auto">
             <div className="m-9">
               <form>
-                <div className="justify-center items-center text-center md:text-center ms:text-center">
-                  {" "}
-                  {/* Изменено */}
-                  <h2 className="text-3xl font-semibold">
-                    Отправьте нам письмо
-                  </h2>
+                <div className="justify-center items-center text-center">
+                  <div className="text-4xl font-bold mb-4 text-center">
+                    Свяжитесь с нами
+                  </div>
                 </div>
                 <div className="mt-3 grid grid-cols-1 gap-x-6 gap-y-8">
                   <div className="col-span-4">
@@ -79,15 +58,9 @@ const Form: React.FC = () => {
                           />
                           <label
                             htmlFor="link-checkbox"
-                            className="ms-2 text-xs w-52 font-light text-gray-900 dark:text-gray-300"
+                            className="ms-2 text-xs w-52 font-light text-gray-900 dark:text-gray-600"
                           >
-                            Я подтверждаю, что ознакомлен(-а) с Политикой
-                            обработки персональных данных, а также даю согласие
-                            «Согласие на обработку персональных данных» на
-                            обработку своих персональных данных в соответствии
-                            Федеральным законом от 27.07.2006 &#x2116; 152-ФЗ "О
-                            персональных данных". Настоящее согласие даётся мною
-                            бессрочно.
+                            Я подтверждаю, что ознакомлен(-а) с <a href="public/docs/Политика_конфиденциальности_ФС_compressed.pdf" className="text-blue-600 underline">Политикой обработки персональных данных</a>, а также даю согласие <a href="public/docs/Политика_конфиденциальности_ФС_compressed.pdf" className="text-blue-600 underline">«Согласие на обработку персональных данных»</a> на обработку своих персональных данных в соответствии с Федеральным законом от 27.07.2006 &#x2116; 152-ФЗ "О персональных данных". Настоящее согласие даётся мною бессрочно.
                           </label>
                         </div>
                       </div>
