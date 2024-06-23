@@ -21,7 +21,6 @@ export default function Home() {
       <About1 />
       <Faq />
       <Anket />
-      <QrBlock />
       <Form />
       <News />
     </>
