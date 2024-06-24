@@ -150,7 +150,7 @@ const Header = () => {
           </div>
           {menuItems.map((item) => {
             return item.hasOwnProperty("children") ? (
-              <Dropdown item={item} />
+              <Dropdown item={item} dropTitle={"О нас"} />
             ) : (
               <Link className="hover:text-blue-500" href={item?.route || ""}>
                 {item.title}
