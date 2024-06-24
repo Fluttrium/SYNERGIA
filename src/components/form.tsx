@@ -1,8 +1,9 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, MouseEvent } from "react";
 import Input from "./ui/inputs/forminput";
 import "@/components/styles/Form.scss";
+import Link from "next/link";
 
 const Form: React.FC = () => {
   const [isChecked, setIsChecked] = useState(false); // Состояние для чекбокса
@@ -10,6 +11,25 @@ const Form: React.FC = () => {
   // Обработчик изменения состояния чекбокса
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(event.target.checked); // Обновляем состояние isChecked
+  };
+
+  const downloadPDF1 = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const link = document.createElement("a");
+    link.href = "docs/Политика_конфиденциальности_ФС_compressed.pdf"; // или '/api/download-pdf' если используете API Route
+    link.download = "Политика конфиденциальности";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  const downloadPDF2 = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const link = document.createElement("a");
+    link.href = "docs/Соглашение_на_обработку_данных_ФС_compressed.pdf"; // или '/api/download-pdf' если используете API Route
+    link.download = "Соглашение на обработку данных";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   useEffect(() => {
@@ -60,7 +80,26 @@ const Form: React.FC = () => {
                             htmlFor="link-checkbox"
                             className="ms-2 text-xs w-52 font-light text-gray-900 dark:text-gray-600"
                           >
-                            Я подтверждаю, что ознакомлен(-а) с <a href="public/docs/Политика_конфиденциальности_ФС_compressed.pdf" className="text-blue-600 underline">Политикой обработки персональных данных</a>, а также даю согласие <a href="public/docs/Политика_конфиденциальности_ФС_compressed.pdf" className="text-blue-600 underline">«Согласие на обработку персональных данных»</a> на обработку своих персональных данных в соответствии с Федеральным законом от 27.07.2006 &#x2116; 152-ФЗ "О персональных данных". Настоящее согласие даётся мною бессрочно.
+                            Я подтверждаю, что ознакомлен(-а) с{" "}
+                            <Link
+                              onClick={downloadPDF1}
+                              href=""
+                              className="text-blue-600 underline"
+                            >
+                              Политикой обработки персональных данных
+                            </Link>
+                            , а также даю согласие{" "}
+                            <Link
+                              onClick={downloadPDF2}
+                              href=""
+                              className="text-blue-600 underline"
+                            >
+                              «Согласие на обработку персональных данных»
+                            </Link>{" "}
+                            на обработку своих персональных данных в
+                            соответствии с Федеральным законом от 27.07.2006
+                            &#x2116; 152-ФЗ "О персональных данных". Настоящее
+                            согласие даётся мною бессрочно.
                           </label>
                         </div>
                       </div>
