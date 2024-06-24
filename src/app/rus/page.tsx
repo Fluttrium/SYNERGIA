@@ -1,5 +1,5 @@
-import Tadjik from "@/components/Tadjik";
-import Uzbek from "@/components/Uzbek";
+import Rus from "@/components/Rus";
+import Uzbek from "@/components/Rus";
 import About2 from "@/components/about2";
 import AboutTown from "@/components/abouttown";
 import Table from "@/components/tables";
@@ -11,6 +11,6 @@ export const metadata = {
 };
 export default function Home() {
   return <>
-  <Tadjik/>
+  <Rus/>
   </>;
 }

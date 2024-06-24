@@ -34,29 +34,7 @@ export default function Kirgiz() {
             </div>
           </div>
           {/* Column 2 */}
-          <div className="space-y-6">
-            <div className="arch bg-white p-4 shadow-lg">
-              <img
-                src="qr/qr-codeKirgiz.gif"
-                alt="Image 4"
-                className="w-64 h-64 object-cover"
-              />
-            </div>
-            <div className="arch bg-white p-4 shadow-lg">
-              <img
-                src="qr/qr-code2kirgiz.gif"
-                alt="Image 5"
-                className="w-64 h-64 object-cover"
-              />
-            </div>
-            <div className="arch bg-white p-4 shadow-lg">
-              <img
-                src="qr/qr-code3kirgiz.gif"
-                alt="Image 6"
-                className="w-64 h-64 object-cover"
-              />
-            </div>
-          </div>
+          
         </div>
       </div>
     </section>

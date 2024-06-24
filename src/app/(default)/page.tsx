@@ -9,10 +9,6 @@ import QrBlock from "@/components/qrblock";
 
 import Footer from "@/components/ui/footer";
 
-export const metadata = {
-  title: "Home - Open PRO",
-  description: "Page description",
-};
 export default function Home() {
   return (
     <>
@@ -21,7 +17,6 @@ export default function Home() {
       <About1 />
       <Faq />
       <Anket />
-      <QrBlock />
       <Form />
       <News />
     </>
