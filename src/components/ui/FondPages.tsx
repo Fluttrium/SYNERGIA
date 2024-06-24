@@ -3,6 +3,7 @@ import Link from "next/link";
 import { MenuItem } from "@/components/ui/header";
 import { IconContext } from "react-icons";
 import { IoIosArrowDown } from "react-icons/io";
+import Offcanvas from "./Offcanvas";
 
 interface Props {
   item: MenuItem;
@@ -14,6 +15,12 @@ export default function Dropdown({ item, dropTitle }: Props) {
   const menuItems = item?.children ? item.children : [];
   const dropdownRef = useRef<HTMLDivElement>(null);
   const hoverTimeoutRef = useRef<number | null>(null);
+
+  const [isOpenn, setIsOpenn] = useState(false);
+
+  const openOffcanvas = () => {
+    setIsOpenn(!isOpenn);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -78,6 +85,12 @@ export default function Dropdown({ item, dropTitle }: Props) {
             {childItem.title}
           </Link>
         ))}
+        <button
+          onClick={openOffcanvas}
+          className="text-lg focus:outline-none px-4 py-1 text-left"
+        >
+          Контакты
+        </button>
       </div>
       {isOpen && (
         <div

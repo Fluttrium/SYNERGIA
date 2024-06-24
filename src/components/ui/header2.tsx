@@ -14,7 +14,22 @@ export interface MenuItem {
   children?: MenuItem[];
 }
 
-const menuItems: MenuItem[] = [
+const menuItemsMig: MenuItem[] = [
+  {
+    title: "Products",
+    children: [
+      {
+        title: "Буклеты",
+        route: "/history",
+      },
+      {
+        title: "Услуги в сфере миграции",
+        route: "/migration",
+      },
+    ],
+  },
+];
+const menuItemsPiter: MenuItem[] = [
   {
     title: "Products",
     children: [
@@ -22,6 +37,33 @@ const menuItems: MenuItem[] = [
         title: "История",
         route: "/history",
       },
+      {
+        title: "Экономика Сaнкт-Петербурга",
+        route: "/economics",
+      },
+      {
+        title: "Услуги в сфере миграции",
+        route: "/migration",
+      },
+      {
+        title: "Культура Сaнкт-Петербурга",
+        route: "/culture",
+      },
+      {
+        title: "Символы",
+        route: "/culture",
+      },
+      {
+        title: "Духовно-нравственные ценности",
+        route: "/petersburgSoul",
+      },
+    ],
+  },
+];
+const menuItemsAbout: MenuItem[] = [
+  {
+    title: "Products",
+    children: [
       {
         title: "Цели и задачи",
         route: "aim",
@@ -31,28 +73,12 @@ const menuItems: MenuItem[] = [
         route: "/news",
       },
       {
-        title: "Услуги в сфере миграции",
-        route: "/migration",
-      },
-      {
-        title: "Экономика Сaнкт-Петербурга",
-        route: "/economics",
-      },
-      {
-        title: "Культура Сaнкт-Петербурга",
-        route: "/culture",
-      },
-      {
-        title: "Духовно-нравственные ценности",
-        route: "/petersburgSoul",
+        title: "Проекты",
+        route: "/news",
       },
       {
         title: "Реквизиты",
         route: "/requisites",
-      },
-      {
-        title: "Отчеты",
-        route: "/reports",
       },
     ],
   },
@@ -77,18 +103,7 @@ const menuItemsForBurger: MenuItem[] = [
         title: "Услуги в сфере миграции",
         route: "/migration",
       },
-      {
-        title: "Экономика Сaнкт-Петербурга",
-        route: "/economics",
-      },
-      {
-        title: "Культура Сaнкт-Петербурга",
-        route: "/culture",
-      },
-      {
-        title: "Духовно-нравственные ценности",
-        route: "/petersburgSoul",
-      },
+
       {
         title: "Реквизиты",
         route: "/requisites",
@@ -137,9 +152,9 @@ const Header = () => {
           </div>
         </div>
         <div className="  hidden md:flex   items-center space-x-10 mx-10">
-          <a href="/towns" className="text-lg ">
+          <Link href="/towns" className="text-lg ">
             Города-побратимы
-          </a>
+          </Link>
           <div className="flex gap-x-12 items-end">
             <button
               onClick={openOffcanvas}
@@ -148,7 +163,25 @@ const Header = () => {
               Контакты
             </button>
           </div>
-          {menuItems.map((item) => {
+          {menuItemsMig.map((item) => {
+            return item.hasOwnProperty("children") ? (
+              <Dropdown item={item} dropTitle={"Услуги в сфере миграции"} />
+            ) : (
+              <Link className="hover:text-blue-500" href={item?.route || ""}>
+                {item.title}
+              </Link>
+            );
+          })}
+          {menuItemsPiter.map((item) => {
+            return item.hasOwnProperty("children") ? (
+              <Dropdown item={item} dropTitle={"Санкт-Петербург"} />
+            ) : (
+              <Link className="hover:text-blue-500" href={item?.route || ""}>
+                {item.title}
+              </Link>
+            );
+          })}
+          {menuItemsAbout.map((item) => {
             return item.hasOwnProperty("children") ? (
               <Dropdown item={item} dropTitle={"О нас"} />
             ) : (
