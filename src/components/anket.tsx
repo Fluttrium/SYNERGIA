@@ -126,7 +126,7 @@ function Anket() {
             <p className="text-4xl font-bold mb-4 text-left mt-12">
               С чем у вас <br />
               ассоциируется <br />
-              Санкт-Петербург?
+              Санкт&#8209;Петербург?
             </p>
           </div>
         </div>
