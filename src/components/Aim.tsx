@@ -65,12 +65,12 @@ export default function Aim() {
             </li>
           </ul>
           <a
-          href="Ustav.pdf"
-          download
-          className="inline-block bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded text-center md:text-left mb-8 ml-6"
-        >
-          Устав фонда СИНЕРГИЯ
-        </a>
+            href="Ustav.pdf"
+            download
+            className="inline-block bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded text-center md:text-left mb-8 ml-6"
+          >
+            Устав Фонда СИНЕРГИЯ
+          </a>
         </div>
       </div>
     </section>
