@@ -8,9 +8,10 @@ import Offcanvas from "./Offcanvas";
 interface Props {
   item: MenuItem;
   dropTitle: string;
+  showOffcanvas: boolean;
 }
 
-export default function Dropdown({ item, dropTitle }: Props) {
+export default function Dropdown({ item, dropTitle, showOffcanvas }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const menuItems = item?.children ? item.children : [];
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -20,6 +21,10 @@ export default function Dropdown({ item, dropTitle }: Props) {
 
   const openOffcanvas = () => {
     setIsOpenn(!isOpenn);
+  };
+
+  const closeOffcanvas = () => {
+    setIsOpenn(false);
   };
 
   useEffect(() => {
@@ -48,7 +53,7 @@ export default function Dropdown({ item, dropTitle }: Props) {
   const handleMouseLeave = () => {
     hoverTimeoutRef.current = window.setTimeout(() => {
       setIsOpen(false);
-    }, 300); // Устанавливаем задержку перед закрытием (в миллисекундах)
+    }, 100); // Устанавливаем задержку перед закрытием (в миллисекундах)
   };
 
   const toggle = () => {
@@ -65,7 +70,7 @@ export default function Dropdown({ item, dropTitle }: Props) {
       onMouseLeave={handleMouseLeave}
     >
       <button
-        className={`text-lg focus:text-blue-400 flex flex-row items-center ${
+        className={`text-lg  flex flex-row items-center ${
           isOpen ? "text-blue-400" : ""
         }`}
         onClick={toggle}
@@ -85,19 +90,19 @@ export default function Dropdown({ item, dropTitle }: Props) {
             {childItem.title}
           </Link>
         ))}
-        <button
-          onClick={openOffcanvas}
-          className="text-lg focus:outline-none px-4 py-1 text-left"
-        >
-          Контакты
-        </button>
+        {showOffcanvas ? (
+          <button
+            onClick={openOffcanvas}
+            className="text-lg  px-4 py-1 text-left hover:text-blue-400"
+          >
+            Контакты
+          </button>
+        ) : (
+          <></>
+        )}
       </div>
-      {isOpen && (
-        <div
-          className="fixed top-0 bottom-0 left-0 z-20 bg-black/40"
-          onClick={toggle}
-        ></div>
-      )}
+      {isOpen}
+      {isOpenn ? <Offcanvas onClose={closeOffcanvas} /> : <></>}
     </div>
   );
 }

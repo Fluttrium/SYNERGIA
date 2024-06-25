@@ -20,7 +20,7 @@ const menuItemsMig: MenuItem[] = [
     children: [
       {
         title: "Буклеты",
-        route: "/history",
+        route: "/buklet",
       },
       {
         title: "Услуги в сфере миграции",
@@ -51,7 +51,7 @@ const menuItemsPiter: MenuItem[] = [
       },
       {
         title: "Символы",
-        route: "/culture",
+        route: "/symbol",
       },
       {
         title: "Духовно-нравственные ценности",
@@ -66,7 +66,7 @@ const menuItemsAbout: MenuItem[] = [
     children: [
       {
         title: "Цели и задачи",
-        route: "aim",
+        route: "/aim",
       },
       {
         title: "Новости",
@@ -93,7 +93,7 @@ const menuItemsForBurger: MenuItem[] = [
       },
       {
         title: "Цели и задачи",
-        route: "aim",
+        route: "/aim",
       },
       {
         title: "Новости",
@@ -155,17 +155,14 @@ const Header = () => {
           <Link href="/towns" className="text-lg ">
             Города-побратимы
           </Link>
-          <div className="flex gap-x-12 items-end">
-            <button
-              onClick={openOffcanvas}
-              className="text-lg focus:outline-none"
-            >
-              Контакты
-            </button>
-          </div>
+
           {menuItemsMig.map((item) => {
             return item.hasOwnProperty("children") ? (
-              <Dropdown item={item} dropTitle={"Услуги в сфере миграции"} />
+              <Dropdown
+                item={item}
+                dropTitle={"Услуги в сфере миграции"}
+                showOffcanvas={false}
+              />
             ) : (
               <Link className="hover:text-blue-500" href={item?.route || ""}>
                 {item.title}
@@ -174,7 +171,11 @@ const Header = () => {
           })}
           {menuItemsPiter.map((item) => {
             return item.hasOwnProperty("children") ? (
-              <Dropdown item={item} dropTitle={"Санкт-Петербург"} />
+              <Dropdown
+                item={item}
+                dropTitle={"Санкт-Петербург"}
+                showOffcanvas={false}
+              />
             ) : (
               <Link className="hover:text-blue-500" href={item?.route || ""}>
                 {item.title}
@@ -183,7 +184,7 @@ const Header = () => {
           })}
           {menuItemsAbout.map((item) => {
             return item.hasOwnProperty("children") ? (
-              <Dropdown item={item} dropTitle={"О нас"} />
+              <Dropdown item={item} dropTitle={"О нас"} showOffcanvas={true} />
             ) : (
               <Link className="hover:text-blue-500" href={item?.route || ""}>
                 {item.title}
