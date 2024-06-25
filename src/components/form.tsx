@@ -1,31 +1,50 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
-import { useEffect, useState, MouseEvent } from "react";
+import { useEffect, useState } from "react";
 import Input from "./ui/inputs/forminput";
 import "@/components/styles/Form.scss";
 import Link from "next/link";
+import {
+  useForm,
+  SubmitHandler,
+  UseFormRegister,
+  RegisterOptions,
+} from "react-hook-form";
+import { sendEmail } from "@/utils/send-email";
+
+export type FormData = {
+  name: string;
+  email: string;
+  message: string;
+};
 
 const Form: React.FC = () => {
-  const [isChecked, setIsChecked] = useState(false); // Состояние для чекбокса
+  const { register, handleSubmit } = useForm<FormData>();
 
-  // Обработчик изменения состояния чекбокса
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsChecked(event.target.checked); // Обновляем состояние isChecked
+  const onSubmit: SubmitHandler<FormData> = (data) => {
+    sendEmail(data);
   };
 
-  const downloadPDF1 = (e: MouseEvent<HTMLAnchorElement>) => {
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsChecked(event.target.checked);
+  };
+
+  const downloadPDF1 = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const link = document.createElement("a");
-    link.href = "docs/Политика_конфиденциальности_ФС_compressed.pdf"; // или '/api/download-pdf' если используете API Route
+    link.href = "docs/Политика_конфиденциальности_ФС_compressed.pdf";
     link.download = "Политика конфиденциальности";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
-  const downloadPDF2 = (e: MouseEvent<HTMLAnchorElement>) => {
+
+  const downloadPDF2 = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const link = document.createElement("a");
-    link.href = "docs/Соглашение_на_обработку_данных_ФС_compressed.pdf"; // или '/api/download-pdf' если используете API Route
+    link.href = "docs/Соглашение_на_обработку_данных_ФС_compressed.pdf";
     link.download = "Соглашение на обработку данных";
     document.body.appendChild(link);
     link.click();
@@ -36,18 +55,16 @@ const Form: React.FC = () => {
     const button = document.getElementById(
       "submit-button"
     ) as HTMLButtonElement;
-    button.disabled = !isChecked; // Устанавливаем disabled в зависимости от состояния isChecked
+    button.disabled = !isChecked;
   }, [isChecked]);
 
   return (
     <section className="section flex justify-center">
       <div className="flex flex-col items-center w-full">
-        {/* Contact Information */}
-        {/* Form */}
         <div className="flex justify-center items-center py-8 w-full">
           <div className="bg-white drop-shadow-lg container w-max rounded py-2 mx-auto">
             <div className="m-9">
-              <form>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="justify-center items-center text-center">
                   <div className="text-4xl font-bold mb-4 text-center">
                     Свяжитесь с нами
@@ -56,13 +73,25 @@ const Form: React.FC = () => {
                 <div className="mt-3 grid grid-cols-1 gap-x-6 gap-y-8">
                   <div className="col-span-4">
                     <div className="space-y-10">
-                      <Input name="Имя" placeholder="Ваше имя" />
-                      <Input name="Почта" placeholder="example@yourmail.com" />
-                      <Input name="Телефон" placeholder="+7(XXX)-XXX-XX-XX" />
+                      <Input
+                        register={register}
+                        name="name"
+                        placeholder="Ваше имя"
+                      />
+                      <Input
+                        register={register}
+                        name="email"
+                        placeholder="example@yourmail.com"
+                      />
+                      <Input
+                        register={register}
+                        name="message"
+                        placeholder="+7(XXX)-XXX-XX-XX"
+                      />
                       <div className="flex-col justify-center items-center">
                         <button
                           id="submit-button"
-                          type="button"
+                          type="submit"
                           className={`text-white bg-purple-600 hover:bg-purple-600 focus:ring-4 focus:ring-purple-600 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-600 focus:outline-none dark:focus:ring-purple-600 ${isChecked ? "" : "opacity-50 cursor-not-allowed"}`}
                           disabled={!isChecked}
                         >
