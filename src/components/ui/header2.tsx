@@ -14,7 +14,22 @@ export interface MenuItem {
   children?: MenuItem[];
 }
 
-const menuItems: MenuItem[] = [
+const menuItemsMig: MenuItem[] = [
+  {
+    title: "Products",
+    children: [
+      {
+        title: "Буклеты",
+        route: "/buklet",
+      },
+      {
+        title: "Услуги в сфере миграции",
+        route: "/migration",
+      },
+    ],
+  },
+];
+const menuItemsPiter: MenuItem[] = [
   {
     title: "Products",
     children: [
@@ -23,28 +38,43 @@ const menuItems: MenuItem[] = [
         route: "/history",
       },
       {
-        title: "Цели и задачи",
-        route: "aim",
-      },
-      {
-        title: "Новости",
-        route: "/news",
+        title: "Экономика Сaнкт-Петербурга",
+        route: "/economics",
       },
       {
         title: "Услуги в сфере миграции",
         route: "/migration",
       },
       {
-        title: "Экономика Сaнкт-Петербурга",
-        route: "/economics",
-      },
-      {
         title: "Культура Сaнкт-Петербурга",
         route: "/culture",
       },
       {
+        title: "Символы",
+        route: "/symbol",
+      },
+      {
         title: "Духовно-нравственные ценности",
         route: "/petersburgSoul",
+      },
+    ],
+  },
+];
+const menuItemsAbout: MenuItem[] = [
+  {
+    title: "Products",
+    children: [
+      {
+        title: "Цели и задачи",
+        route: "/aim",
+      },
+      {
+        title: "Новости",
+        route: "/news",
+      },
+      {
+        title: "Проекты",
+        route: "/project",
       },
       {
         title: "Реквизиты",
@@ -67,7 +97,7 @@ const menuItemsForBurger: MenuItem[] = [
       },
       {
         title: "Цели и задачи",
-        route: "aim",
+        route: "/aim",
       },
       {
         title: "Новости",
@@ -77,18 +107,7 @@ const menuItemsForBurger: MenuItem[] = [
         title: "Услуги в сфере миграции",
         route: "/migration",
       },
-      {
-        title: "Экономика Сaнкт-Петербурга",
-        route: "/economics",
-      },
-      {
-        title: "Культура Сaнкт-Петербурга",
-        route: "/culture",
-      },
-      {
-        title: "Духовно-нравственные ценности",
-        route: "/petersburgSoul",
-      },
+
       {
         title: "Реквизиты",
         route: "/requisites",
@@ -137,20 +156,39 @@ const Header = () => {
           </div>
         </div>
         <div className="  hidden md:flex   items-center space-x-10 mx-10">
-          <a href="/towns" className="text-lg ">
+          <Link href="/towns" className="text-lg ">
             Города-побратимы
-          </a>
-          <div className="flex gap-x-12 items-end">
-            <button
-              onClick={openOffcanvas}
-              className="text-lg focus:outline-none"
-            >
-              Контакты
-            </button>
-          </div>
-          {menuItems.map((item) => {
+          </Link>
+
+          {menuItemsMig.map((item) => {
             return item.hasOwnProperty("children") ? (
-              <Dropdown item={item} />
+              <Dropdown
+                item={item}
+                dropTitle={"Услуги в сфере миграции"}
+                showOffcanvas={false}
+              />
+            ) : (
+              <Link className="hover:text-blue-500" href={item?.route || ""}>
+                {item.title}
+              </Link>
+            );
+          })}
+          {menuItemsPiter.map((item) => {
+            return item.hasOwnProperty("children") ? (
+              <Dropdown
+                item={item}
+                dropTitle={"Санкт-Петербург"}
+                showOffcanvas={false}
+              />
+            ) : (
+              <Link className="hover:text-blue-500" href={item?.route || ""}>
+                {item.title}
+              </Link>
+            );
+          })}
+          {menuItemsAbout.map((item) => {
+            return item.hasOwnProperty("children") ? (
+              <Dropdown item={item} dropTitle={"О нас"} showOffcanvas={true} />
             ) : (
               <Link className="hover:text-blue-500" href={item?.route || ""}>
                 {item.title}
