@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { IconContext } from "react-icons";
 import { MdClose } from "react-icons/md";
@@ -20,8 +20,28 @@ const OffcanvasDrop: React.FC<{
   onToggle: () => void;
   onClose: () => void;
 }> = ({ item, isOpen, onToggle, onClose }) => {
+  const dropRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropRef.current && !dropRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen, onClose]);
+
   return (
-    <div className="relative inline-block">
+    <div className="relative inline-block" ref={dropRef}>
       <button
         type="button"
         className="px-4 py-2 text-white focus:outline-none font-medium rounded-lg text-sm inline-flex items-center"
@@ -46,7 +66,7 @@ const OffcanvasDrop: React.FC<{
       </button>
 
       {isOpen && item.children && (
-        <div className="absolute mt-2 w-44 bg-white rounded-lg shadow-lg z-50 ">
+        <div className="absolute mt-2 w-44 bg-white rounded-lg shadow-lg z-50">
           <ul
             role="menu"
             aria-orientation="vertical"
@@ -103,7 +123,7 @@ const OffcanvasMobile: React.FC<OffcanvasProps> = ({ onClose, menuItems }) => {
                 item={item}
                 isOpen={openDrop === index}
                 onToggle={() => handleToggle(index)}
-                onClose={onClose}
+                onClose={() => setOpenDrop(null)}
               />
             ) : (
               <Link

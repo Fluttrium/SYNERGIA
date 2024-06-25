@@ -74,11 +74,15 @@ const menuItemsAbout: MenuItem[] = [
       },
       {
         title: "Проекты",
-        route: "/news",
+        route: "/project",
       },
       {
         title: "Реквизиты",
         route: "/requisites",
+      },
+      {
+        title: "Отчеты",
+        route: "/reports",
       },
     ],
   },
