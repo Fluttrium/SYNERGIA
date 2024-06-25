@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { MenuItem } from "@/components/ui/header";
+import { MenuItem } from "@/components/ui/header2";
 import { IconContext } from "react-icons";
 import { IoIosArrowDown } from "react-icons/io";
 import Offcanvas from "./Offcanvas";
