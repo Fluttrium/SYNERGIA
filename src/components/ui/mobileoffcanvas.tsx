@@ -1,7 +1,9 @@
+// components/OffcanvasMobile.tsx
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { IconContext } from "react-icons";
 import { MdClose } from "react-icons/md";
+import Offcanvas from "./Offcanvas"; // Import the Offcanvas component
 
 export interface OffcanvasMobileItem {
   title: string;
@@ -94,52 +96,70 @@ const OffcanvasDrop: React.FC<{
 
 const OffcanvasMobile: React.FC<OffcanvasProps> = ({ onClose, menuItems }) => {
   const [openDrop, setOpenDrop] = useState<number | null>(null);
+  const [isContactOpen, setIsContactOpen] = useState(false); // State to handle contact offcanvas
 
   const handleToggle = (index: number) => {
     setOpenDrop(openDrop === index ? null : index);
   };
 
+  const handleContactOpen = () => {
+    setIsContactOpen(true);
+  };
+
+  const handleContactClose = () => {
+    setIsContactOpen(false);
+  };
+
   return (
-    <div className="offcanvas items-start z-40">
-      <div className="absolute top-0">
-        <button
-          type="button"
-          className="text-white mx-3 my-3"
-          onClick={onClose}
-        >
-          <IconContext.Provider
-            value={{ className: "shared-class", size: "35" }}
+    <>
+      {isContactOpen && <Offcanvas onClose={handleContactClose} />}
+      <div className="offcanvas items-start z-40">
+        <div className="absolute top-0">
+          <button
+            type="button"
+            className="text-white mx-3 my-3"
+            onClick={onClose}
           >
-            <MdClose />
-          </IconContext.Provider>
-        </button>
-      </div>
-      <div className="flex my-14 justify-start">
-        <div className="space-y-5 basis-1/3">
-          {menuItems.map((item, index) =>
-            item.children ? (
-              <OffcanvasDrop
-                key={index}
-                item={item}
-                isOpen={openDrop === index}
-                onToggle={() => handleToggle(index)}
-                onClose={() => setOpenDrop(null)}
-              />
-            ) : (
-              <Link
-                onClick={onClose}
-                className="px-4 py-2 text-white hover:text-blue-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm inline-flex items-center"
-                key={index}
-                href={item.route || "#"}
-                passHref
-              >
-                {item.title}
-              </Link>
-            )
-          )}
+            <IconContext.Provider
+              value={{ className: "shared-class", size: "35" }}
+            >
+              <MdClose />
+            </IconContext.Provider>
+          </button>
+        </div>
+        <div className="flex my-14 justify-start">
+          <div className="space-y-5 basis-1/3">
+            {menuItems.map((item, index) =>
+              item.children ? (
+                <OffcanvasDrop
+                  key={index}
+                  item={item}
+                  isOpen={openDrop === index}
+                  onToggle={() => handleToggle(index)}
+                  onClose={() => setOpenDrop(null)}
+                />
+              ) : (
+                <Link
+                  onClick={onClose}
+                  className="px-4 py-2 text-white hover:text-blue-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm inline-flex items-center"
+                  key={index}
+                  href={item.route || "#"}
+                  passHref
+                >
+                  {item.title}
+                </Link>
+              )
+            )}
+            <button
+              onClick={handleContactOpen}
+              className="text-lg px-4 py-1 text-left hover:text-blue-400"
+            >
+              Контакты
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

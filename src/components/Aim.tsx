@@ -1,5 +1,18 @@
-/* eslint-disable react/no-unescaped-entities */
+"use client";
 import "@/components/styles/Aim.scss";
+import Link from "next/link";
+import { MouseEvent } from "react";
+
+const downloadPDF1 = (e: MouseEvent<HTMLAnchorElement>) => {
+  e.preventDefault();
+  const link = document.createElement("a");
+  link.href = "docs/Устав Фонд СИНЕРГИЯ.pdf"; // или '/api/download-pdf' если используете API Route
+  link.download = "Политика конфиденциальности";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 export default function Aim() {
   return (
     <section className="relative bg-white h-max z-1 w-full md:flex justify-center">
@@ -64,13 +77,13 @@ export default function Aim() {
               </p>
             </li>
           </ul>
-          <a
-            href="Ustav.pdf"
-            download
+          <Link
+            onClick={downloadPDF1}
+            href=""
             className="inline-block bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded text-center md:text-left mb-8 ml-6"
           >
             Устав Фонда СИНЕРГИЯ
-          </a>
+          </Link>
         </div>
       </div>
     </section>
