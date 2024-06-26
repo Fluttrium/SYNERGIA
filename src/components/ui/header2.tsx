@@ -34,16 +34,8 @@ const menuItemsPiter: MenuItem[] = [
     title: "Products",
     children: [
       {
-        title: "История",
-        route: "/history",
-      },
-      {
         title: "Экономика Сaнкт-Петербурга",
         route: "/economics",
-      },
-      {
-        title: "Услуги в сфере миграции",
-        route: "/migration",
       },
       {
         title: "Культура Сaнкт-Петербурга",
@@ -64,6 +56,10 @@ const menuItemsAbout: MenuItem[] = [
   {
     title: "Products",
     children: [
+      {
+        title: "История",
+        route: "/history",
+      },
       {
         title: "Цели и задачи",
         route: "/aim",

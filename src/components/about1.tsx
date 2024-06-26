@@ -30,7 +30,7 @@ export default function About1() {
             коммуникация; планирование; совместная работа; синергия: 1+1=3
           </p>
         </div>
-        <div className="flex flex-col md:flex-row md:space-x-20 space-y-10 md:space-y-0 items-center">
+        <div className="flex flex-col md:flex-row md:space-x-20 space-y-10 md:space-y-0 items-start">
           <div className="grid text-center">
             <div className="space-y-4">
               <div className="relative">

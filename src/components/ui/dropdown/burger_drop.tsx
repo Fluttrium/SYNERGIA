@@ -33,17 +33,10 @@ const menuItemsAbout: OffcanvasMobileItem[] = [
   {
     title: "Санкт\u2011Петербург",
     children: [
-      {
-        title: "История",
-        route: "/history",
-      },
+      
       {
         title: "Экономика Санкт\u2011Петербурга",
         route: "/economics",
-      },
-      {
-        title: "Услуги в сфере миграции",
-        route: "/migration",
       },
       {
         title: "Культура Санкт\u2011Петербурга",
@@ -63,6 +56,10 @@ const menuItemsAbout: OffcanvasMobileItem[] = [
     title: "O нас",
     children: [
       {
+        title: "История",
+        route: "/history",
+      },
+      {
         title: "Цели и задачи",
         route: "/aim",
       },
@@ -72,7 +69,7 @@ const menuItemsAbout: OffcanvasMobileItem[] = [
       },
       {
         title: "Проекты",
-        route: "/news",
+        route: "/Project",
       },
       {
         title: "Реквизиты",
