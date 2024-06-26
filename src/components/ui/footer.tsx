@@ -18,7 +18,7 @@ export default function Footer() {
         </div>
         {/* Одна колонка для маленьких экранов */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:col-span-2 md:pr-40 md:gap-8">
-          <div className="footer-column flex flex-col">
+          <div className="footer-column flex flex-col items-center md:items-start">
             <p className="text-xl font-bold pb-2">Карта сайта</p>
             <Link href="/" passHref>
               <span className="text-sm cursor-pointer">Главная</span>
@@ -30,7 +30,7 @@ export default function Footer() {
               <span className="text-sm cursor-pointer">Города-побратимы</span>
             </Link>
           </div>
-          <div className="footer-column flex flex-col">
+          <div className="footer-column flex flex-col items-center md:items-start">
             <p className="text-xl font-bold pb-2">Фонд</p>
             <Link href="/aim" passHref>
               <span className="text-sm cursor-pointer">Цели и задачи</span>
@@ -42,7 +42,7 @@ export default function Footer() {
               <span className="text-sm cursor-pointer">Реквизиты</span>
             </Link>
           </div>
-          <div className="footer-column flex flex-col">
+          <div className="footer-column flex flex-col items-center md:items-start">
             <p className="text-xl font-bold pb-2">Информация</p>
             <Link href="/history" passHref>
               <span className="text-sm cursor-pointer">История</span>
@@ -56,7 +56,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="md:hidden text-center col-span-1">
+        <div className="md:hidden text-center col-span-1 mt-8">
           <h2 className="text-3xl font-bold">СИНЕРГИЯ</h2>
           <p className="text-sm mt-2">
             Фонд развития культурно-делового сотрудничества городов-побратимов{" "}
@@ -66,7 +66,6 @@ export default function Footer() {
         </div>
       </div>
 
-      <hr className="bg-white/50 h-0.5" />
       <hr className="bg-white/50 h-0.5" />
 
       <div className="container mx-auto px-2 py-2 flex flex-col md:flex-row justify-between items-center">

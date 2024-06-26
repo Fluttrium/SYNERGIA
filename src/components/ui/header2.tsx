@@ -34,16 +34,8 @@ const menuItemsPiter: MenuItem[] = [
     title: "Products",
     children: [
       {
-        title: "История",
-        route: "/history",
-      },
-      {
         title: "Экономика Сaнкт-Петербурга",
         route: "/economics",
-      },
-      {
-        title: "Услуги в сфере миграции",
-        route: "/migration",
       },
       {
         title: "Культура Сaнкт-Петербурга",
@@ -64,6 +56,10 @@ const menuItemsAbout: MenuItem[] = [
   {
     title: "Products",
     children: [
+      {
+        title: "История",
+        route: "/history",
+      },
       {
         title: "Цели и задачи",
         route: "/aim",
@@ -132,7 +128,7 @@ const Header = () => {
   };
 
   return (
-    <header className="  fixed w-screen bg-slate-200/75  z-10 border-gray-200 px-4 lg:px-6 py-5 dark:bg-gray-800">
+<header className="fixed w-screen bg-white/90 z-10 border-gray-200 px-4 lg:px-6 py-5">
       <div className="flex  md:justify-start justify-between items-center mx-auto max-w-screen-xl">
         <div className="flex flex-row space-x-2  ">
           <Link className="hidden md:flex flex-col justify-items-end" href="/">

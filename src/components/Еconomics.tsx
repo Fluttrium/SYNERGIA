@@ -6,7 +6,7 @@ export default function Economics() {
           Экономика Санкт-Петербурга
         </h2>
 
-        <figure className="md:flex bg-slate-100 rounded-xl p-4 md:p-0 dark:bg-slate-800 rounded-lg">
+        <figure className="md:flex bg-white rounded-xl p-4 md:p-0 rounded-lg">
           <img
             className="w-1/2 md:w-1/3 h-auto mx-auto rounded-lg"
             src="/economics/Beglov.jpg"
@@ -14,7 +14,7 @@ export default function Economics() {
           />
           <div className="pt-4 md:p-4 text-center md:text-left space-y-2">
             <blockquote>
-              <p className="text-sm md:text-base font-medium text-white">
+              <p className="text-sm md:text-base font-medium text-black">
                 “В структуре налоговых поступлений в бюджетную систему
                 Российской Федерации промышленность Санкт‑Петербурга занимает
                 39,1%. Петербургская промышленность вышла на стабильно высокий
