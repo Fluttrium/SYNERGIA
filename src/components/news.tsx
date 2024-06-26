@@ -4,25 +4,25 @@ import React from "react";
 export default function News() {
   const blogs = [
     {
-      date: "Oct 26, 2018",
+      date: "26 октября, 2018",
       title: "Конференция городов-побратимов Санкт\u2011Петербурга",
       description: "",
       image: "Vitse-konsul-Indii-560x416.jpg",
       link: "https://www.dp.ru/a/2018/11/02/Sostojalas_konferencija_po",
     },
     {
-      date: "Oct 24, 2018",
+      date: "24 октября, 2018",
       title: "Выставка-ярмарка Дары Востока в КВЦ Евразия",
       description: "",
       image: "darVostok.jpg",
       link: "https://www.dp.ru/a/2018/10/24/Konferencija_o_sozdanii_ezh",
     },
     {
-      date: "Dec 22, 2023",
-      title: "The no-fuss guide to upselling and cross selling",
+      date: "С 1 марта 2024",
+      title: "Гармоничная миграция от Фонда «СИНЕРГИЯ»",
       description: "",
-      image: "darVostok.jpg",
-      link: "https://www.dp.ru/a/2018/10/24/Konferencija_o_sozdanii_ezh",
+      image: "2024-06-27 00.11.08.jpg",
+      link: "https://okrug21.ru/pravoporyadok/informatsiya-dlya-migrantov/besplatnye-konsultatsii-yurista-fonda-sinergiya/",
     },
   ];
 
@@ -33,14 +33,14 @@ export default function News() {
           {blogs.map((blog, index) => (
             <div
               key={index}
-              className="bg-white shadow-md rounded-lg overflow-hidden w-256"
+              className="bg-white shadow-md rounded-lg overflow-hidden"
             >
               <div className="overflow-hidden">
                 <a href={blog.link}>
                   <img
                     src={blog.image}
                     alt="blog"
-                    className="w-full h-64 object-cover transition-transform duration-300 hover:scale-105"
+                    className="w-full h-64 object-left object-cover transition-transform duration-300 hover:scale-105"
                   />
                 </a>
               </div>

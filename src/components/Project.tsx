@@ -17,7 +17,6 @@ export default function Project() {
       image: "projects/2024-06-23 17.15.28.jpg",
       link: ""
     },
-    
   ];
 
   return (
@@ -26,10 +25,14 @@ export default function Project() {
         <h2 className="text-3xl font-bold pb-10 text-center">Опыт успешной реализации социально значимых проектов</h2>
         <div className="grid grid-cols-1 gap-8">
           {blogs.map((blog, index) => (
-            <div key={index} className="bg-white shadow-md rounded-lg overflow-hidden w-100">
+            <div key={index} className="bg-white shadow-md rounded-lg overflow-hidden w-full">
               <div className="overflow-hidden">
                 <a href={blog.link}>
-                  <img src={blog.image} alt="blog" className=" w-full h-64 object-cover transition-transform duration-300 hover:scale-105" />
+                  <img 
+                    src={blog.image} 
+                    alt="blog" 
+                    className={`w-full h-64 object-cover transition-transform duration-300 hover:scale-105 ${index === 0 ? 'object-center' : 'object-left-top'}`} 
+                  />
                 </a>
               </div>
               <div className="p-6">
@@ -49,4 +52,4 @@ export default function Project() {
       </div>
     </section>
   );
-}  
+}

@@ -9,7 +9,9 @@
   
     img {
       width: 100%; // Изображения занимают всю ширину родительского контейнера
-      border-radius: 8px; // Закругление углов
+      border-radius: 8px;
+      height: 240px;
+      object-fit: cover; // Закругление углов
       transition: transform 0.3s ease; // Плавное изменение масштаба при наведении
     }
   }
