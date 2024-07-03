@@ -1,30 +1,30 @@
-/* eslint-disable react/no-unescaped-entities */
-import React from "react";
+"use client";
+import React, { useState, useEffect } from "react";
+
+interface NewsItem {
+  date: string;
+  title: string;
+  description: string;
+  image: string;
+  link: string;
+}
 
 export default function News() {
-  const blogs = [
-    {
-      date: "26 октября, 2018",
-      title: "Конференция городов-побратимов Санкт\u2011Петербурга",
-      description: "",
-      image: "Vitse-konsul-Indii-560x416.jpg",
-      link: "https://www.dp.ru/a/2018/11/02/Sostojalas_konferencija_po",
-    },
-    {
-      date: "24 октября, 2018",
-      title: "Выставка-ярмарка Дары Востока в КВЦ Евразия",
-      description: "",
-      image: "darVostok.jpg",
-      link: "https://www.dp.ru/a/2018/10/24/Konferencija_o_sozdanii_ezh",
-    },
-    {
-      date: "С 1 марта 2024",
-      title: "Гармоничная миграция от Фонда «СИНЕРГИЯ»",
-      description: "",
-      image: "2024-06-27 00.11.08.jpg",
-      link: "https://okrug21.ru/pravoporyadok/informatsiya-dlya-migrantov/besplatnye-konsultatsii-yurista-fonda-sinergiya/",
-    },
-  ];
+  const [blogs, setBlogs] = useState<NewsItem[]>([]);
+
+  useEffect(() => {
+    async function fetchNews() {
+      try {
+        const res = await fetch("/api/getnews"); // Вызов API метода GET
+        const data = await res.json();
+        setBlogs(data); // Устанавливаем полученные данные в состояние
+      } catch (error) {
+        console.error("Ошибка при загрузке новостей:", error);
+      }
+    }
+
+    fetchNews();
+  }, []);
 
   return (
     <section className="relative flex bg-white h-max z-1 w-full justify-center py-32">
