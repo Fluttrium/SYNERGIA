@@ -1,13 +1,10 @@
+'use server'
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 import { writeFile } from "fs/promises";
 import { initDatabase, addItem } from '@/db/db'; // Импорт функций работы с базой данных
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+
 
 export async function POST(req: NextRequest) {
   await initDatabase(); // Инициализируем базу данных при запуске запроса

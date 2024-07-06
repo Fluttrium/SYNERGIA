@@ -1,3 +1,4 @@
+'use server'
 import { NextRequest, NextResponse } from 'next/server';
 import { closeDatabase, fetchNewsFromDatabase, initDatabase } from '@/db/db'; // Путь к функции извлечения данных из базы
 
@@ -7,7 +8,7 @@ initDatabase().catch(err => {
   process.exit(1); // Завершаем процесс, если инициализация базы данных не удалась
 });
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const news = await fetchNewsFromDatabase(); // Извлекаем новости из базы данных
     return NextResponse.json(news);
