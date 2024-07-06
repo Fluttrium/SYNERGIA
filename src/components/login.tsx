@@ -45,7 +45,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-24 lg:px-8">
+    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-28 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <img
           className="mx-auto"
@@ -90,6 +90,7 @@ const Login: React.FC = () => {
               >
                 Пароль
               </label>
+<<<<<<< HEAD
               <div className="text-sm">
                 <a
                   href="#"
@@ -98,8 +99,10 @@ const Login: React.FC = () => {
                   Забыли пароль?
                 </a>
               </div>
+=======
+>>>>>>> 37e7a94 (jopa)
             </div>
-            <div className="mt-2">
+            <div className="mt-1">
               <input
                 id="password"
                 name="password"
@@ -117,11 +120,14 @@ const Login: React.FC = () => {
             <button
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              
             >
+              
               Войти
             </button>
           </div>
         </form>
+<<<<<<< HEAD
 
         <p className="mt-5 text-center text-sm text-gray-500">
           Не зарегистрированы?{" "}
@@ -132,6 +138,8 @@ const Login: React.FC = () => {
             Зарегистрироваться
           </a>
         </p>
+=======
+>>>>>>> 37e7a94 (jopa)
       </div>
     </div>
   );
