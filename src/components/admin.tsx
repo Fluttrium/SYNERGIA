@@ -31,14 +31,17 @@ export default function Admin() {
       const result = await response.json();
       if (response.ok) {
         setImageUrl(result.imageUrl);
-        setMessage(`File uploaded successfully with ID: ${result.itemId}`);
+        setMessage(`Новость загружена успешно с ID: ${result.itemId}`);
+        alert(`Новость загружена успешно с ID: ${result.itemId}`);
         reset();
       } else {
         setMessage(`Upload failed: ${result.error}`);
+        alert(`Upload failed: ${result.error}`);
       }
     } catch (error) {
       console.error("Error uploading file:", error);
       setMessage("Error uploading file");
+      alert("Error uploading file");
     }
   };
 
@@ -110,7 +113,6 @@ export default function Admin() {
           {message && <p>{message}</p>}
           {imageUrl && (
             <div>
-              <p>Image uploaded successfully:</p>
               <img src={imageUrl} alt="Uploaded" style={{ maxWidth: "100%" }} />
             </div>
           )}
