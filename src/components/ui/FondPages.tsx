@@ -16,7 +16,6 @@ export default function Dropdown({ item, dropTitle, showOffcanvas }: Props) {
   const menuItems = item?.children ? item.children : [];
   const dropdownRef = useRef<HTMLDivElement>(null);
   const hoverTimeoutRef = useRef<number | null>(null);
-
   const [isOpenn, setIsOpenn] = useState(false);
 
   const openOffcanvas = () => {
@@ -80,11 +79,11 @@ export default function Dropdown({ item, dropTitle, showOffcanvas }: Props) {
       <div
         className={`absolute top-16 z-30 w-max h-max flex flex-col py-4 bg-slate-200/75 rounded-md ${transClass}`}
       >
-        {menuItems.map((childItem) => (
+        {menuItems.map((childItem, index) => (
           <Link
             className="hover:text-blue-400 px-4 py-1"
             onClick={toggle}
-            key={childItem.route}
+            key={index} // Используем индекс как ключ, если childItem.route не уникален
             href={childItem.route || ""}
           >
             {childItem.title}

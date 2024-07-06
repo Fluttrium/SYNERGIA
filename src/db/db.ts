@@ -2,6 +2,11 @@ import sqlite3 from 'sqlite3';
 
 let db: sqlite3.Database;
 
+interface User {
+  username: string;
+  password: string;
+}
+
 export async function initDatabase() {
   db = new sqlite3.Database('./collection.db', sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, async (err) => {
     if (err) {
@@ -57,6 +62,7 @@ export async function fetchNewsFromDatabase(): Promise<any[]> {
   });
 }
 export async function closeDatabase() {
+  
   return new Promise<void>((resolve, reject) => {
     db.close((err) => {
       if (err) {
@@ -65,6 +71,21 @@ export async function closeDatabase() {
       }
       console.log('Соединение с базой данных SQLite закрыто.');
       resolve();
+    });
+  });
+}
+
+export async function giveUser(username: string): Promise<User | null> {
+  const selectSql = `SELECT * FROM users WHERE username = ?`;
+
+  return new Promise<User | null>((resolve, reject) => {
+    db.get(selectSql, [username], (err, user:User) => {
+      if (err) {
+        console.error('Ошибка при получении данных пользователя из базы данных:', err.message);
+        reject(err);
+      } else {
+        resolve(user); // Возвращаем данные пользователя или null, если пользователь не найден
+      }
     });
   });
 }
