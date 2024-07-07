@@ -57,12 +57,6 @@ export default function News() {
               key={blog.id}
               className="bg-white shadow-md rounded-lg overflow-hidden"
             >
-              <button
-                onClick={() => deleteNews(blog.id)}
-                className="text-red-500 hover:text-red-700 transition-colors duration-300"
-              >
-                Удалить
-              </button>
               <div className="overflow-hidden">
                 <a href={blog.link}>
                   <Image
@@ -70,7 +64,8 @@ export default function News() {
                     alt="blog"
                     width={500}
                     height={500}
-                    className="w-full h-64 object-left object-cover transition-transform duration-300 hover:scale-105"
+                    
+                    className="w-full h-64 object-left object-cover transition-transform duration-300 hover:scale-105 borderRadius: '10px',"
                   />
                 </a>
               </div>

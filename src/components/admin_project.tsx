@@ -11,7 +11,7 @@ interface FormData {
   file: FileList;
 }
 
-interface NewsItem {
+interface ProjectItem {
   id: string;
   date: string;
   title: string;
@@ -20,24 +20,24 @@ interface NewsItem {
   link: string;
 }
 
-export default function Admin() {
+export default function AdminProject() {
   const { register, handleSubmit, reset } = useForm<FormData>();
   const [imageUrl, setImageUrl] = useState<string>("");
   const [message, setMessage] = useState<string>("");
-  const [blogs, setBlogs] = useState<NewsItem[]>([]);
+  const [blogs, setBlogs] = useState<ProjectItem[]>([]);
 
   useEffect(() => {
-    async function fetchNews() {
+    async function fetchProjects() {
       try {
-        const res = await fetch('/api/getnews');
+        const res = await fetch('/api/getprojects');
         const data = await res.json();
         setBlogs(data);
       } catch (error) {
-        console.error('Ошибка при загрузке новостей:', error);
+        console.error('Ошибка при загрузке проекта:', error);
       }
     }
 
-    fetchNews();
+    fetchProjects();
   }, []);
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
@@ -48,7 +48,7 @@ export default function Admin() {
     formData.append("link", data.link);
 
     try {
-      const response = await fetch("/api/upload", {
+      const response = await fetch("/api/uploadproject", {
         method: "POST",
         body: formData,
       });
@@ -56,8 +56,8 @@ export default function Admin() {
       const result = await response.json();
       if (response.ok) {
         setImageUrl(result.imageUrl);
-        setMessage(`Новость загружена успешно с ID: ${result.itemId}`);
-        alert(`Новость загружена успешно с ID: ${result.itemId}`);
+        setMessage(`Проект загружен успешно с ID: ${result.itemId}`);
+        alert(`Проект загружен успешно с ID: ${result.itemId}`);
         reset();
         setBlogs([...blogs, {
           id: result.itemId,
@@ -77,9 +77,9 @@ export default function Admin() {
       alert("Error uploading file");
     }
   };
-  async function deleteNews(id: string) {
+  async function deleteProject(id: string) {
     try {
-      const response = await fetch('/api/deletnews', {
+      const response = await fetch('/api/deletproject', {
         method: 'DELETE',
         body: JSON.stringify({ id }),
         headers: {
@@ -90,14 +90,14 @@ export default function Admin() {
       if (response.ok) {
         setBlogs((prevBlogs) => prevBlogs.filter((blog) => blog.id !== id));
       } else {
-        console.error('Ошибка при удалении новости:', await response.text());
+        console.error('Ошибка при удалении проекта:', await response.text());
       }
     } catch (error) {
-      console.error('Ошибка при удалении новости:', error);
+      console.error('Ошибка при удалении проекта:', error);
     }
   }
 
-  const NewsComponent = () => (
+  const ProjectComponent = () => (
     <section className="relative flex bg-white h-max z-1 w-full justify-center py-32">
       <div className="max-w-screen-lg py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -107,7 +107,7 @@ export default function Admin() {
               className="bg-white shadow-md rounded-lg overflow-hidden"
             >
               <button
-                onClick={() => deleteNews(blog.id)}
+                onClick={() => deleteProject(blog.id)}
                 className="text-red-500 hover:text-red-700 transition-colors duration-300"
               >
                 Удалить
@@ -124,9 +124,6 @@ export default function Admin() {
                 </a>
               </div>
               <div className="p-6">
-                <span className="block text-gray-500 text-sm mb-2">
-                  {blog.date}
-                </span>
                 <h3 className="text-xl font-bold mb-2">
                   <a
                     href={blog.link}
@@ -151,7 +148,7 @@ export default function Admin() {
       <div className="container mx-auto mt-28 py-36">
         <main className="main">
           <h1 className="title text-4xl font-bold text-center">
-            Добавить новость
+            Добавить проект
           </h1>
 
           <label htmlFor="title" className="block font-medium text-2xl">
@@ -207,7 +204,7 @@ export default function Admin() {
               className="inline-flex justify-center items-center px-4 text-white rounded bg-purple-500 transition-transform duration-300 ease-in-out transform hover:scale-105 focus:outline-none active:scale-95 mt-5"
               style={{ width: "210px", height: "50px" }}
             >
-              Загрузить Новость
+              Загрузить Проект
             </button>
           </div>
 
@@ -241,7 +238,7 @@ export default function Admin() {
         </main>
       </div>
     </form>
-    <NewsComponent />
+    <ProjectComponent />
     </div>
 
 

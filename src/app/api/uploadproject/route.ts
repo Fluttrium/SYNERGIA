@@ -11,8 +11,8 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const file = formData.get("file") as File; // Приводим к типу File
     const title = formData.get("title") as string;
-    const pretitle = formData.get("title") as string;
     const description = formData.get("description") as string;
+    const link = formData.get("link") as string;
 
     if (!file) {
       return NextResponse.json(
@@ -23,13 +23,13 @@ export async function POST(req: NextRequest) {
 
     const buffer = Buffer.from(await file.arrayBuffer());
     const filename = Date.now() + "_" + file.name.replaceAll(" ", "_");
-    const uploadPath = path.join(process.cwd(), "public/uploads", filename);
+    const uploadPath = path.join(process.cwd(), "public/uploadsProjects", filename);
 
     await writeFile(uploadPath, buffer);
     const imageUrl = `/uploadsProjects/${filename}`;
 
     // Сохраняем информацию о файле в базу данных
-    const itemId = await addProject(pretitle, title, description, imageUrl);
+    const itemId = await addProject(title, description, imageUrl, link);
 
     return NextResponse.json({
       message: "Success",

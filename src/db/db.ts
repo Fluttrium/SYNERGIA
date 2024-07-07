@@ -122,13 +122,13 @@ export async function deletNews(id: string) {
 }
 
 export async function addProject(
-  pretitle: string,
   title: string,
   description: string,
-  image: string
+  image: string,
+  link: string
 ): Promise<number> {
-  const insertSql = `INSERT INTO projects(pretitle, title, description, image, ) VALUES(?, ?, ?, ?)`;
-  const values = [pretitle, title, description, image];
+  const insertSql = `INSERT INTO project (title, description, image, link) VALUES(?, ?, ?, ?)`;
+  const values = [title, description, image, link];
 
   return new Promise<number>((resolve, reject) => {
     db.run(insertSql, values, function (err) {
@@ -145,7 +145,7 @@ export async function addProject(
 }
 
 export async function fetchProjectsFromDatabase(): Promise<any[]> {
-  const selectSql = `SELECT * FROM projects`;
+  const selectSql = `SELECT * FROM project`;
 
   return new Promise<any[]>((resolve, reject) => {
     db.all(selectSql, (err, rows) => {
@@ -162,8 +162,8 @@ export async function fetchProjectsFromDatabase(): Promise<any[]> {
   });
 }
 
-export async function deletProject(id: string) {
-  const deletSql = `DELETE FROM projects WHERE id = ?`;
+export async function deletProject (id: string) {
+  const deletSql = `DELETE FROM project WHERE id = ?`;
 
   return new Promise<void>((resolve, reject) => {
     db.run(deletSql, id, function (err) {
