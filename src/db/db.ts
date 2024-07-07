@@ -1,3 +1,5 @@
+import { rejects } from 'assert';
+import { resolve } from 'path';
 import sqlite3 from 'sqlite3';
 
 let db: sqlite3.Database;
@@ -85,6 +87,21 @@ export async function giveUser(username: string): Promise<User | null> {
         reject(err);
       } else {
         resolve(user); // Возвращаем данные пользователя или null, если пользователь не найден
+      }
+    });
+  });
+}
+
+export async function deletNews(id: string) {
+  const deletSql = `DELETE FROM items WHERE id = ?`;
+
+  return new Promise<void>((resolve, reject) => {
+    db.run(deletSql, id, function (err) {
+      if (err) {
+        console.error('Ошибка при удалении элемента:', err.message);
+        reject(err);
+      } else {
+        resolve();
       }
     });
   });

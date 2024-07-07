@@ -11,6 +11,7 @@ initDatabase().catch(err => {
 export async function GET() {
   try {
     const news = await fetchNewsFromDatabase(); // Извлекаем новости из базы данных
+    
     return NextResponse.json(news);
   } catch (err) {
     console.error('Ошибка при получении новостей:', err);
