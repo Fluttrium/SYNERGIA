@@ -90,17 +90,6 @@ const Login: React.FC = () => {
               >
                 Пароль
               </label>
-<<<<<<< HEAD
-              <div className="text-sm">
-                <a
-                  href="#"
-                  className="font-semibold text-indigo-600 hover:text-indigo-500"
-                >
-                  Забыли пароль?
-                </a>
-              </div>
-=======
->>>>>>> 37e7a94 (jopa)
             </div>
             <div className="mt-1">
               <input
@@ -120,26 +109,11 @@ const Login: React.FC = () => {
             <button
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              
             >
-              
               Войти
             </button>
           </div>
         </form>
-<<<<<<< HEAD
-
-        <p className="mt-5 text-center text-sm text-gray-500">
-          Не зарегистрированы?{" "}
-          <a
-            href="#"
-            className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
-          >
-            Зарегистрироваться
-          </a>
-        </p>
-=======
->>>>>>> 37e7a94 (jopa)
       </div>
     </div>
   );
