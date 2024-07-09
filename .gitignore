@@ -40,4 +40,4 @@ collection.db
 
 # Игнорировать папки public/uploads и public/uploadsProject
 /public/uploads/
-/public/uploadsProject/
+/public/uploadsProjects/
