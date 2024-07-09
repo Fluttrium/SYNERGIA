@@ -13,11 +13,8 @@ const db = new sqlite3.Database(
 
 const value = ["aue@gmail.com", "aue228"];
 
-const value2 = ["titlc", "titlc", "descriptionc", "imagec"];
-
 const insertSql = `INSERT INTO users (username, password) VALUES(?, ?)`;
-const insertSql2 =
-  "INSERT INTO projects ( pretitle, title, description,image) VALUES( ?, ?, ?, ?)";
+
 
 db.serialize(() => {
   db.run(
@@ -63,12 +60,12 @@ db.serialize(() => {
 
   db.run(
     `
-    CREATE TABLE IF NOT EXISTS projects (
+    CREATE TABLE IF NOT EXISTS project (
       id  INTEGER PRIMARY KEY AUTOINCREMENT,
-      pretitle TEXT,
       title TEXT, 
       description TEXT ,
-      image TEXT 
+      image TEXT,
+      link TEXT
     );
   `,
     (err) => {
@@ -78,12 +75,4 @@ db.serialize(() => {
       console.log("Created project table.");
     }
   );
-
-  db.run(insertSql2, value2, function (err) {
-    if (err) {
-      return console.error(err.message);
-    }
-    const id = this.lastID;
-    console.log(`Rows inserted, ID ${id}`);
-  });
 });
