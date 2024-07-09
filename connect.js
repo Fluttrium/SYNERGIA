@@ -1,6 +1,5 @@
 const sqlite3 = require("sqlite3").verbose();
 
-// Connecting to or creating a new SQLite database file
 const db = new sqlite3.Database(
   "./collection.db",
   sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
@@ -12,16 +11,15 @@ const db = new sqlite3.Database(
   }
 );
 
-const value =[
-  "aue@gmail.com",
-  "aue228"
-]
+const value = ["aue@gmail.com", "aue228"];
+
+const value2 = ["titlc", "titlc", "descriptionc", "imagec"];
 
 const insertSql = `INSERT INTO users (username, password) VALUES(?, ?)`;
+const insertSql2 =
+  "INSERT INTO projects ( pretitle, title, description,image) VALUES( ?, ?, ?, ?)";
 
-// Serialize method ensures that database queries are executed sequentially
 db.serialize(() => {
-  // Create the items table if it doesn't exist
   db.run(
     `
       CREATE TABLE IF NOT EXISTS items (
@@ -37,8 +35,6 @@ db.serialize(() => {
         return console.error(err.message);
       }
       console.log("Created items table.");
-
-      
     }
   );
   db.run(
@@ -54,17 +50,40 @@ db.serialize(() => {
         return console.error(err.message);
       }
       console.log("Created user table.");
-
-      
     }
   );
 
   db.run(insertSql, value, function (err) {
-          if (err) {
-            return console.error(err.message);
-          }
-          const id = this.lastID; // get the id of the last inserted row
-          console.log(`Rows inserted, ID ${id}`);
-        });
+    if (err) {
+      return console.error(err.message);
+    }
+    const id = this.lastID; // get the id of the last inserted row
+    console.log(`Rows inserted, ID ${id}`);
+  });
 
+  db.run(
+    `
+    CREATE TABLE IF NOT EXISTS projects (
+      id  INTEGER PRIMARY KEY AUTOINCREMENT,
+      pretitle TEXT,
+      title TEXT, 
+      description TEXT ,
+      image TEXT 
+    );
+  `,
+    (err) => {
+      if (err) {
+        return console.error(err.message);
+      }
+      console.log("Created project table.");
+    }
+  );
+
+  db.run(insertSql2, value2, function (err) {
+    if (err) {
+      return console.error(err.message);
+    }
+    const id = this.lastID;
+    console.log(`Rows inserted, ID ${id}`);
+  });
 });
