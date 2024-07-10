@@ -15,6 +15,9 @@ const value = ["aue@gmail.com", "aue228"];
 
 const insertSql = `INSERT INTO users (username, password) VALUES(?, ?)`;
 
+const insertSql2 = `INSERT INTO buklets (name, image) VALUES(?, ?)`;
+const imagesArray = ["/qr/рус1.png", "/qr/рус1.png", "/qr/рус1.png"];
+const value2 = ["rus", JSON.stringify(imagesArray)];
 
 db.serialize(() => {
   db.run(
@@ -75,4 +78,28 @@ db.serialize(() => {
       console.log("Created project table.");
     }
   );
+
+  db.run(
+    `
+  CREATE TABLE IF NOT EXISTS buklets (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    image TEXT
+  );
+  `,
+    (err) => {
+      if (err) {
+        return console.error(err.message);
+      }
+      console.log("Created buklets table.");
+    }
+  );
+
+  db.run(insertSql2, value2, function (err) {
+    if (err) {
+      return console.error(err.message);
+    }
+    const id = this.lastID; // get the id of the last inserted row
+    console.log(`Rows inserted, ID ${id}`);
+  });
 });

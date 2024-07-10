@@ -41,3 +41,4 @@ collection.db
 # Игнорировать папки public/uploads и public/uploadsProject
 /public/uploads/
 /public/uploadsProjects/
+/public/uploadImgForBuklets
