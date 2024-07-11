@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 export default function AdminPanel() {
+
   return (
     <section className="relative bg-white h-max z-1 w-full md:flex justify-center py-48">
       <div className="column justify-center">
@@ -15,6 +16,7 @@ export default function AdminPanel() {
             style={{ width: "410px", height: "100px" }}
           >
             <Link href="/admin" passHref>
+
               <span className="text-3xl cursor-pointer">Новости</span>
             </Link>
           </button>
