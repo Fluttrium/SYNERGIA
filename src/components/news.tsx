@@ -13,6 +13,7 @@ interface NewsItem {
 
 export default function News() {
   const [blogs, setBlogs] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchNews() {
@@ -22,30 +23,36 @@ export default function News() {
         setBlogs(data); // Устанавливаем полученные данные в состояние
       } catch (error) {
         console.error("Ошибка при загрузке новостей:", error);
+      } finally {
+        setLoading(false);
       }
     }
 
     fetchNews();
   }, []);
 
-  async function deleteNews(id: string) {
-    try {
-      const response = await fetch("/api/deletnews", {
-        method: "DELETE",
-        body: JSON.stringify({ id }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.ok) {
-        setBlogs((prevBlogs) => prevBlogs.filter((blog) => blog.id !== id));
-      } else {
-        console.error("Ошибка при удалении новости:", await response.text());
-      }
-    } catch (error) {
-      console.error("Ошибка при удалении новости:", error);
-    }
+  if (loading) {
+    return (
+      <section className="relative flex bg-white h-max z-1 w-full justify-center py-32">
+        <div className="w-screen py-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div
+                key={index}
+                className="bg-gray shadow-md rounded-lg overflow-hidden animate-pulse"
+              >
+                <div className="w-full h-64 bg-gray-200"></div>
+                <div className="p-6">
+                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-6 bg-gray-200 rounded mb-4"></div>
+                  <div className="h-4 bg-gray-200 rounded"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
   }
 
   return (
@@ -64,7 +71,6 @@ export default function News() {
                     alt="blog"
                     width={500}
                     height={500}
-                    
                     className="w-full h-64 object-left object-cover transition-transform duration-300 hover:scale-105 borderRadius: '10px',"
                   />
                 </a>
