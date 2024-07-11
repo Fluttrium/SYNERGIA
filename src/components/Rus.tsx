@@ -1,5 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
-import React from 'react';
+import React from "react";
+import Image from "next/image";
 
 export default function Rus() {
   return (
@@ -9,39 +10,40 @@ export default function Rus() {
           Буклеты на русском языке
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-         
           <div className="space-y-6">
             <div className="arch bg-white p-4 shadow-lg">
-              <img
-                src="qr/рус1.png"
+              <Image
+                src="/qr/рус1.png"
                 alt="Image 1"
                 className="w-full h-full object-cover"
+                width={500}
+                height={500}
               />
             </div>
             <div className="arch bg-white p-4 shadow-lg">
               <img
-                src="qr/рус2.png"
+                src="/qr/рус2.png"
                 alt="Image 2"
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="arch bg-white p-4 shadow-lg">
               <img
-                src="qr/рус3.png"
+                src="/qr/рус3.png"
                 alt="Image 3"
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="arch bg-white p-4 shadow-lg">
               <img
-                src="qr/рус4.png"
+                src="/qr/рус4.png"
                 alt="Image 3"
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="arch bg-white p-4 shadow-lg">
               <img
-                src="qr/рус5.png"
+                src="/qr/рус5.png"
                 alt="Image 3"
                 className="w-full h-full object-cover"
               />
