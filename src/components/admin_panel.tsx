@@ -7,7 +7,7 @@ export default function AdminPanel() {
         
 
 <section className="relative bg-white h-max z-1 w-full md:flex justify-center py-48">
-<div className="column justify-center">
+<div className="column justify-center py-20">
 <h2 className="text-3xl font-bold pb-10 text-center">Добро пожаловть в панель управления!</h2>
 <div className="flex justify-center">
             <button
