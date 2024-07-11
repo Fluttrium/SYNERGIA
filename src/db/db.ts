@@ -162,7 +162,7 @@ export async function fetchProjectsFromDatabase(): Promise<any[]> {
   });
 }
 
-export async function deletProject (id: string) {
+export async function deletProject(id: string) {
   const deletSql = `DELETE FROM project WHERE id = ?`;
 
   return new Promise<void>((resolve, reject) => {
@@ -175,4 +175,35 @@ export async function deletProject (id: string) {
       }
     });
   });
+}
+
+export async function addBukletPage(
+  name: string,
+  images: string[]
+): Promise<number> {
+  const insertSql = `INSERT INTO buklets (name, image) VALUES (?, ?)`;
+
+  try {
+    // Преобразуем массив имен файлов в строку JSON
+    const imagesJson = JSON.stringify(images);
+
+    // Выполняем вставку в базу данных
+    const result = await new Promise<number>((resolve, reject) => {
+      db.run(insertSql, [name, imagesJson], function (err) {
+        if (err) {
+          console.error("Ошибка при вставке элемента:", err.message);
+          reject(err);
+        }
+
+        const id = this.lastID; // Получаем ID последней вставленной строки
+        console.log(`Вставлена строка с ID ${id}`);
+        resolve(id);
+      });
+    });
+
+    return result;
+  } catch (error) {
+    console.error("Ошибка при выполнении вставки:", error);
+    throw error;
+  }
 }
