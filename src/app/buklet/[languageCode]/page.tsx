@@ -32,7 +32,27 @@ export default function Page({ params }: { params: { languageCode: string } }) {
   }, [params.languageCode]);
 
   if (!langs) {
-    return <div>Loading...</div>;
+    return (
+      <section className="relative flex bg-white h-max z-1 w-full justify-center py-32">
+        <div className="w-screen py-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div
+                key={index}
+                className="bg-gray shadow-md rounded-lg overflow-hidden animate-pulse"
+              >
+                <div className="w-full h-64 bg-gray-200"></div>
+                <div className="p-6">
+                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-6 bg-gray-200 rounded mb-4"></div>
+                  <div className="h-4 bg-gray-200 rounded"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
   }
 
   return (

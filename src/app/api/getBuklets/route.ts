@@ -18,7 +18,7 @@ export async function GET() {
         } else {
           const languages = rows.map((row) => ({
             code: row.code,
-            name: `Буклеты на ${row.code} языке`,
+            name: row.code,
           }));
           resolve(NextResponse.json(languages, { status: 200 }));
         }

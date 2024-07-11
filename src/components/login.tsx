@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, ChangeEvent, FormEvent } from "react";
+import { useRouter } from "next/navigation";
 
 interface FormData {
   username: string;
@@ -12,6 +13,10 @@ const Login: React.FC = () => {
     username: "",
     password: "",
   });
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const router = useRouter();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -23,6 +28,8 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError(null);
 
     try {
       const response = await fetch("/api/login", {
@@ -38,9 +45,15 @@ const Login: React.FC = () => {
       }
 
       const result = await response.json();
+      router.push("/admin/admin_panel");
       console.log("Login successful:", result);
     } catch (error) {
       console.error("Error logging in:", error);
+      setError(
+        "Ошибка входа. Пожалуйста, проверьте свои данные и попробуйте снова."
+      );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -63,16 +76,16 @@ const Login: React.FC = () => {
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
             <label
-              htmlFor="email"
+              htmlFor="username"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
-              Email адресс
+              Email адрес
             </label>
             <div className="mt-2">
               <input
                 id="username"
                 name="username"
-                type="username"
+                type="email"
                 autoComplete="username"
                 required
                 value={formData.username}
@@ -105,12 +118,15 @@ const Login: React.FC = () => {
             </div>
           </div>
 
+          {error && <div className="text-red-500 text-sm">{error}</div>}
+
           <div>
             <button
               type="submit"
+              disabled={isLoading}
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Войти
+              {isLoading ? "Загрузка..." : "Войти"}
             </button>
           </div>
         </form>
