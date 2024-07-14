@@ -6,25 +6,23 @@ export default function Migration() {
   return (
     <section className="relative bg-white h-max z-1 w-full py-32 flex justify-center">
       <div className="max-w-screen-lg px-4 sm:px-6 lg:px-8">
-        {" "}
-        {/* Добавлены классы для отступов на маленьких и средних экранах */}
         <h2 className="text-3xl font-bold pb-10 text-center">
           Государственные услуги в сфере миграции
         </h2>
-        <p className="text-lg font-semibold text-slate-900 mb-4">
+        <p className="text-lg font-semibold text-slate-900 mb-20">
           В Санкт-Петербурге государственные услуги в сфере миграции оказывает
           Управление по вопросам миграции ГУ МВД России по г. Санкт-Петербургу и
           Ленинградской области.
         </p>
-        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 list-outside md:list-inside">
+        <ul className="flex flex-col items-center gap-5">
           {services.map((service, index) => (
-            <li key={index} className="flex justify-center">
-              <div className="w-200 flex justify-center items-center">
+            <li key={index} className="flex justify-center w-[600px] h-[100px]">
+              <div className="flex justify-center items-center w-full h-full">
                 <Link
                   href={service.link}
-                  className="block py-3 px-4 border border-gray-300 rounded-md transition-transform hover:scale-105 h-100 w-100 mb-5 text-center"
-                  target="_blank" // Добавлен атрибут target="_blank"
-                  rel="noopener noreferrer" // Добавлен атрибут rel="noopener noreferrer" для безопасности
+                  className="block w-full h-full py-3 px-4 border border-gray-300 rounded-md transition-transform hover:scale-105 mb-5 text-center flex items-center justify-center"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   {service.title}
                 </Link>
@@ -37,7 +35,6 @@ export default function Migration() {
   );
 }
 
-// Массив услуг
 const services = [
   {
     title: "Оформление и выдача патентов",

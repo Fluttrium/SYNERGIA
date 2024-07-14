@@ -8,7 +8,7 @@ export default function Economics() {
 
         <figure className="md:flex bg-white rounded-xl p-4 md:p-0 rounded-lg">
           <img
-            className="w-1/2 md:w-1/3 h-auto mx-auto rounded-lg"
+            className="w-full md:w-1/2 h-auto mx-auto md:mx-0 md:rounded-lg"
             src="/economics/Beglov.jpg"
             alt=""
           />
