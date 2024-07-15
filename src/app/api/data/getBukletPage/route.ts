@@ -32,7 +32,6 @@ export async function GET(req: Request): Promise<void | Response> {
           );
           reject(errorResponse);
         } else {
-          // Преобразуем строку JSON обратно в массив
           const result = rows.map((row) => ({
             ...row,
             image: JSON.parse(row.image),
