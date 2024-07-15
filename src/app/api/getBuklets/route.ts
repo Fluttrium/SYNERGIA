@@ -8,19 +8,24 @@ type LanguageRow = {
 };
 
 export async function GET() {
-  return new Promise((resolve, reject) => {
+  return new Promise<any>((resolve, reject) => {
     db.all<LanguageRow>(
       "SELECT DISTINCT name AS code FROM buklets",
       [],
       (err, rows) => {
         if (err) {
-          reject(NextResponse.json({ error: err.message }, { status: 500 }));
+          const errorResponse = NextResponse.json(
+            { error: err.message },
+            { status: 500 }
+          );
+          reject(errorResponse);
         } else {
           const languages = rows.map((row) => ({
             code: row.code,
             name: row.code,
           }));
-          resolve(NextResponse.json(languages, { status: 200 }));
+          const successResponse = NextResponse.json(languages, { status: 200 });
+          resolve(successResponse);
         }
       }
     );

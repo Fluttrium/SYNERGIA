@@ -9,7 +9,7 @@ interface BukletRow {
   image: string;
 }
 
-export async function GET(req: Request) {
+export async function GET(req: Request): Promise<void | Response> {
   const { searchParams } = new URL(req.url);
   const language = searchParams.get("language");
 
@@ -20,20 +20,25 @@ export async function GET(req: Request) {
     );
   }
 
-  return new Promise((resolve, reject) => {
+  return new Promise<void | Response>((resolve, reject) => {
     db.all<BukletRow>(
       "SELECT id, name, image FROM buklets WHERE name = ?",
       [language],
       (err, rows) => {
         if (err) {
-          reject(NextResponse.json({ error: err.message }, { status: 500 }));
+          const errorResponse = NextResponse.json(
+            { error: err.message },
+            { status: 500 }
+          );
+          reject(errorResponse);
         } else {
           // Преобразуем строку JSON обратно в массив
           const result = rows.map((row) => ({
             ...row,
             image: JSON.parse(row.image),
           }));
-          resolve(NextResponse.json(result, { status: 200 }));
+          const successResponse = NextResponse.json(result, { status: 200 });
+          resolve(successResponse);
         }
       }
     );
