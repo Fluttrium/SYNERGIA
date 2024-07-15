@@ -187,7 +187,7 @@ export async function addBukletPage(
     // Преобразуем массив имен файлов в строку JSON
     const imagesJson = JSON.stringify(images);
 
-    // Выполняем вставку в базу данных
+
     const result = await new Promise<number>((resolve, reject) => {
       db.run(insertSql, [name, imagesJson], function (err) {
         if (err) {
@@ -195,7 +195,7 @@ export async function addBukletPage(
           reject(err);
         }
 
-        const id = this.lastID; // Получаем ID последней вставленной строки
+        const id = this.lastID; 
         console.log(`Вставлена строка с ID ${id}`);
         resolve(id);
       });
@@ -207,3 +207,4 @@ export async function addBukletPage(
     throw error;
   }
 }
+

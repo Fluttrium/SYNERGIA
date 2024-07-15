@@ -28,7 +28,6 @@ export async function GET(req: Request) {
         if (err) {
           reject(NextResponse.json({ error: err.message }, { status: 500 }));
         } else {
-          // Преобразуем строку JSON обратно в массив
           const result = rows.map((row) => ({
             ...row,
             image: JSON.parse(row.image),

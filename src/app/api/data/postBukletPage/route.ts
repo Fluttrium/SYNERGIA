@@ -1,8 +1,7 @@
-// api/data/postBukletPage.ts
 import { NextRequest, NextResponse } from "next/server";
 import { writeFile } from "fs/promises";
 import path from "path";
-import { addBukletPage, initDatabase } from "@/db/db"; // Подставьте правильный путь к вашим функциям работы с базой данных
+import { addBukletPage, initDatabase } from "@/db/db";
 
 export async function POST(req: NextRequest) {
   await initDatabase();
@@ -14,7 +13,7 @@ export async function POST(req: NextRequest) {
     // Проверяем, что файлы были переданы
     if (!files || files.length === 0) {
       return NextResponse.json(
-        { error: "No files received." },
+        { error: "Не было получено файлов." },
         { status: 400 }
       );
     }
@@ -42,15 +41,15 @@ export async function POST(req: NextRequest) {
     const itemId = await addBukletPage(name, imageUrls);
 
     return NextResponse.json({
-      message: "Success",
+      message: "Успешно",
       itemId,
       imageUrls,
       status: 201,
     });
   } catch (error: any) {
-    console.error("Error occurred:", error);
+    console.error("Произошла ошибка:", error);
     return NextResponse.json({
-      message: "Failed",
+      message: "Ошибка",
       error: error.message,
       status: 500,
     });
