@@ -1,6 +1,6 @@
-import { NextResponse, NextRequest } from 'next/server';
-import { giveUser, initDatabase } from '@/db/db';
-import { SignJWT } from 'jose';
+import { NextResponse, NextRequest } from "next/server";
+import { giveUser, initDatabase } from "@/db/db";
+import { SignJWT } from "jose";
 
 // Определите типы для учетных данных пользователя
 interface User {
@@ -9,7 +9,7 @@ interface User {
 }
 
 export async function POST(request: NextRequest) {
-  const { username, password } = await request.json() as User;
+  const { username, password } = (await request.json()) as User;
 
   // соединение с базой данных
   await initDatabase();
@@ -21,20 +21,26 @@ export async function POST(request: NextRequest) {
     try {
       // Создание JWT токена
       const token = await new SignJWT({ username: user.username })
-        .setProtectedHeader({ alg: 'HS256' })
-        .setExpirationTime('30m')
-        .sign(Buffer.from('your_secret_key'));
+        .setProtectedHeader({ alg: "HS256" })
+        .setExpirationTime("30m")
+        .sign(Buffer.from("your_secret_key"));
 
       // Установка токена в HTTP-only cookie
       const response = NextResponse.json({ message: token });
-      response.cookies.set('token', token, { httpOnly: true, path: '/' });
+      response.cookies.set("token", token, { httpOnly: false, path: "/" });
 
       return response;
     } catch (error) {
-      console.error('Error signing token:', error);
-      return NextResponse.json({ message: 'Error creating token' }, { status: 500 });
+      console.error("Error signing token:", error);
+      return NextResponse.json(
+        { message: "Error creating token" },
+        { status: 500 }
+      );
     }
   } else {
-    return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 });
+    return NextResponse.json(
+      { message: "Invalid credentials" },
+      { status: 401 }
+    );
   }
 }
