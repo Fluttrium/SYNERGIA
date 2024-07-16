@@ -6,7 +6,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 
 interface Language {
-  code: string;
+  id: string;
   name: string;
 }
 
@@ -70,11 +70,11 @@ const QrBlock: React.FC = () => {
         <ul className="font-bold text-black">
           {languages.map((language) => (
             <li
-              key={language.code}
+              key={language.id}
               className="hover:text-black transition duration-300"
             >
               <Link
-                href={`/buklet/${language.code}`}
+                href={`/buklet/${language.id}`}
                 className="block text-3xl hover:bg-gray-200 p-2 rounded-md"
               >
                 {language.name}

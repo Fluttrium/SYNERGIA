@@ -11,7 +11,7 @@ const db = new sqlite3.Database(
   }
 );
 
-const value = ["aue@gmail.com", "aue228"];
+const value = ["synergia@syner.com", "Syner2024"];
 
 const insertSql = `INSERT INTO users (username, password) VALUES(?, ?)`;
 
@@ -82,10 +82,11 @@ db.serialize(() => {
   db.run(
     `
   CREATE TABLE IF NOT EXISTS buklets (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    image TEXT
-  );
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT,
+  images TEXT,
+  pdfs TEXT
+);
   `,
     (err) => {
       if (err) {
@@ -94,12 +95,4 @@ db.serialize(() => {
       console.log("Created buklets table.");
     }
   );
-
-  db.run(insertSql2, value2, function (err) {
-    if (err) {
-      return console.error(err.message);
-    }
-    const id = this.lastID; // get the id of the last inserted row
-    console.log(`Rows inserted, ID ${id}`);
-  });
 });

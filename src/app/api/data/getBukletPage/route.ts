@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import sqlite3 from "sqlite3";
 
 const db = new sqlite3.Database("./collection.db", sqlite3.OPEN_READWRITE);
@@ -6,11 +6,12 @@ const db = new sqlite3.Database("./collection.db", sqlite3.OPEN_READWRITE);
 interface BukletRow {
   id: number;
   name: string;
-  image: string;
+  images: string; // Assuming images are stored as JSON string
+  pdfs: string; // Assuming pdfs are stored as JSON string
 }
 
-export async function GET(req: Request): Promise<void | Response> {
-  const { searchParams } = new URL(req.url);
+export async function GET(req: NextRequest): Promise<void | Response> {
+  const { searchParams } = new URL(req.nextUrl);
   const language = searchParams.get("language");
 
   if (!language) {
@@ -22,22 +23,34 @@ export async function GET(req: Request): Promise<void | Response> {
 
   return new Promise<void | Response>((resolve, reject) => {
     db.all<BukletRow>(
-      "SELECT id, name, image FROM buklets WHERE name = ?",
+      "SELECT id, name, images, pdfs FROM buklets WHERE id = ?",
       [language],
       (err, rows) => {
         if (err) {
+          console.error("Database query error:", err.message);
           const errorResponse = NextResponse.json(
-            { error: err.message },
+            { error: "Internal Server Error" },
             { status: 500 }
           );
           reject(errorResponse);
         } else {
-          const result = rows.map((row) => ({
-            ...row,
-            image: JSON.parse(row.image),
-          }));
-          const successResponse = NextResponse.json(result, { status: 200 });
-          resolve(successResponse);
+          try {
+            const result = rows.map((row) => ({
+              id: row.id,
+              name: row.name,
+              images: JSON.parse(row.images), // Parse images JSON string
+              pdfs: JSON.parse(row.pdfs), // Parse pdfs JSON string
+            }));
+            const successResponse = NextResponse.json(result, { status: 200 });
+            resolve(successResponse);
+          } catch (error: any) {
+            console.error("Error parsing JSON:", error.message);
+            const errorResponse = NextResponse.json(
+              { error: "Error parsing JSON" },
+              { status: 500 }
+            );
+            reject(errorResponse);
+          }
         }
       }
     );

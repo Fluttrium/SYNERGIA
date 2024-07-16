@@ -7,22 +7,22 @@ export async function POST(req: NextRequest) {
   await initDatabase();
   try {
     const formData = await req.formData();
-    const files = formData.getAll("files");
+    const images = formData.getAll("images");
+    const pdfs = formData.getAll("pdfs");
     const name = formData.get("name") as string;
 
-    // Проверяем, что файлы были переданы
-    if (!files || files.length === 0) {
+    if (!images || images.length === 0 || !pdfs || pdfs.length === 0) {
       return NextResponse.json(
-        { error: "Не было получено файлов." },
+        { error: "Не было получено изображений или PDF файлов." },
         { status: 400 }
       );
     }
 
     const imageUrls: string[] = [];
+    const pdfUrls: string[] = [];
 
-    // Обработка каждого файла
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i] as File;
+    for (let i = 0; i < images.length; i++) {
+      const file = images[i] as File;
       const buffer = Buffer.from(await file.arrayBuffer());
       const filename = Date.now() + "_" + file.name.replaceAll(" ", "_");
       const uploadPath = path.join(
@@ -31,19 +31,33 @@ export async function POST(req: NextRequest) {
         filename
       );
 
-      // Записываем файл на сервер
       await writeFile(uploadPath, buffer);
       const imageUrl = `/uploadImgForBuklets/${filename}`;
       imageUrls.push(imageUrl);
     }
 
-    // Добавляем данные в базу данных
-    const itemId = await addBukletPage(name, imageUrls);
+    for (let i = 0; i < pdfs.length; i++) {
+      const file = pdfs[i] as File;
+      const buffer = Buffer.from(await file.arrayBuffer());
+      const filename = Date.now() + "_" + file.name.replaceAll(" ", "_");
+      const uploadPath = path.join(
+        process.cwd(),
+        "public/uploadPdfForBuklets",
+        filename
+      );
+
+      await writeFile(uploadPath, buffer);
+      const pdfUrl = `/uploadPdfForBuklets/${filename}`;
+      pdfUrls.push(pdfUrl);
+    }
+
+    const itemId = await addBukletPage(name, imageUrls, pdfUrls);
 
     return NextResponse.json({
       message: "Успешно",
       itemId,
       imageUrls,
+      pdfUrls,
       status: 201,
     });
   } catch (error: any) {

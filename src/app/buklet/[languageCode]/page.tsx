@@ -5,11 +5,11 @@ import Image from "next/image";
 interface Lang {
   id: string;
   name: string;
-  image: string[];
+  images: string[];
+  pdfs: string[];
 }
 
 export default function Page({ params }: { params: { languageCode: string } }) {
-  console.log(params.languageCode);
   const [langs, setLangs] = useState<Lang | null>(null);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function Page({ params }: { params: { languageCode: string } }) {
           throw new Error(`Error: ${res.status}`);
         }
         const data = await res.json();
-        setLangs(data[0]); // Поскольку data является массивом, возьмем первый элемент
+        setLangs(data[0]);
       } catch (error) {
         console.error("Ошибка при загрузке проекта:", error);
       }
@@ -62,16 +62,18 @@ export default function Page({ params }: { params: { languageCode: string } }) {
           {langs.name}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {langs.image.map((imgSrc, index) => (
+          {langs.images.map((imgSrc, index) => (
             <div key={index} className="space-y-6">
               <div className="arch bg-white p-4 shadow-lg">
-                <Image
-                  src={imgSrc}
-                  alt={`Image ${index + 1}`}
-                  className="w-full h-full object-cover"
-                  width={500}
-                  height={500}
-                />
+                <a href={langs.pdfs[index]} download>
+                  <Image
+                    src={imgSrc}
+                    alt={`Image ${index + 1}`}
+                    className="w-full h-full object-cover"
+                    width={500}
+                    height={500}
+                  />
+                </a>
               </div>
             </div>
           ))}

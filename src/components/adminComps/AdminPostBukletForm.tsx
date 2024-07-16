@@ -1,24 +1,27 @@
-'use client'
+"use client";
 import React, { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Image from "next/image";
 
 interface FormData {
   name: string;
-  files: FileList[];
+  images: FileList[];
+  pdfs: FileList[];
 }
 
 interface Buklet {
   id: number;
   name: string;
-  image: string[];
+  images: string[];
+  pdfs: string[];
 }
 
 export default function AdminPostBukletForm() {
   const { register, handleSubmit, reset } = useForm<FormData>();
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [message, setMessage] = useState<string>("");
-  const [fileInputs, setFileInputs] = useState<(FileList | null)[]>([null]);
+  const [fileInputs, setFileInputs] = useState<
+    { images: FileList | null; pdfs: FileList | null }[]
+  >([{ images: null, pdfs: null }]);
   const [buklets, setBuklets] = useState<Buklet[]>([]);
 
   const fetchBuklets = async () => {
@@ -43,13 +46,21 @@ export default function AdminPostBukletForm() {
     const formData = new FormData();
     formData.append("name", data.name);
 
-    fileInputs.forEach((files) => {
-      if (files && files.length > 0) {
-        for (let i = 0; i < files.length; i++) {
-          formData.append("files", files[i]);
+    fileInputs.forEach((input) => {
+      if (
+        input.images &&
+        input.images.length > 0 &&
+        input.pdfs &&
+        input.pdfs.length > 0
+      ) {
+        for (let i = 0; i < input.images.length; i++) {
+          formData.append("images", input.images[i]);
+        }
+        for (let i = 0; i < input.pdfs.length; i++) {
+          formData.append("pdfs", input.pdfs[i]);
         }
       } else {
-        alert("Please select at least one file.");
+        alert("Please select at least one image and one PDF file.");
         return;
       }
     });
@@ -62,11 +73,10 @@ export default function AdminPostBukletForm() {
 
       if (response.ok) {
         const result = await response.json();
-        setImageUrls((prevUrls) => prevUrls.concat(result.imageUrls));
         setMessage(`Буклет успешно загружен с ID: ${result.itemId}`);
         alert(`Буклет успешно загружен с ID: ${result.itemId}`);
         reset();
-        setFileInputs([null]);
+        setFileInputs([{ images: null, pdfs: null }]);
         fetchBuklets();
       } else {
         const result = await response.json();
@@ -81,12 +91,16 @@ export default function AdminPostBukletForm() {
   };
 
   const addFileInput = () => {
-    setFileInputs(fileInputs.concat(null));
+    setFileInputs([...fileInputs, { images: null, pdfs: null }]);
   };
 
-  const handleFileChange = (index: number, files: FileList | null) => {
-    const newFileInputs = fileInputs.slice();
-    newFileInputs[index] = files;
+  const handleFileChange = (
+    index: number,
+    type: "images" | "pdfs",
+    files: FileList | null
+  ) => {
+    const newFileInputs = [...fileInputs];
+    newFileInputs[index][type] = files;
     setFileInputs(newFileInputs);
   };
 
@@ -114,19 +128,39 @@ export default function AdminPostBukletForm() {
             {fileInputs.map((input, index) => (
               <div key={index}>
                 <label
-                  htmlFor={`files-${index}`}
+                  htmlFor={`images-${index}`}
                   className="block font-medium text-2xl mt-5 mr-2"
                 >
                   Изображения:
                 </label>
                 <input
                   type="file"
-                  id={`files-${index}`}
-                  {...register(`files.${index}`, { required: true })}
+                  id={`images-${index}`}
+                  {...register(`images.${index}`, { required: true })}
                   accept="image/*"
                   multiple
                   required
-                  onChange={(e) => handleFileChange(index, e.target.files)}
+                  onChange={(e) =>
+                    handleFileChange(index, "images", e.target.files)
+                  }
+                />
+
+                <label
+                  htmlFor={`pdfs-${index}`}
+                  className="block font-medium text-2xl mt-5 mr-2"
+                >
+                  PDF файлы:
+                </label>
+                <input
+                  type="file"
+                  id={`pdfs-${index}`}
+                  {...register(`pdfs.${index}`, { required: true })}
+                  accept="application/pdf"
+                  multiple
+                  required
+                  onChange={(e) =>
+                    handleFileChange(index, "pdfs", e.target.files)
+                  }
                 />
               </div>
             ))}
@@ -138,7 +172,7 @@ export default function AdminPostBukletForm() {
                 className="inline-flex items-center px-4 text-white rounded bg-purple-500 transition-transform duration-300 ease-in-out transform hover:scale-105 focus:outline-none active:scale-95"
                 style={{ width: "210px", height: "50px" }}
               >
-                Добавить еще фотографии
+                Добавить еще фотографии и PDF
               </button>
             </div>
 
@@ -153,7 +187,7 @@ export default function AdminPostBukletForm() {
             </div>
 
             {message && <p>{message}</p>}
-            
+
             <div className="mt-10">
               {buklets.length > 0 && (
                 <div>
@@ -166,8 +200,13 @@ export default function AdminPostBukletForm() {
                         key={buklet.id}
                         className="border rounded-lg overflow-hidden shadow-lg"
                       >
-                        {buklet.image.map((img, idx) => (
-                          <div key={idx} className="relative h-80">
+                        {buklet.images.map((img, idx) => (
+                          <a
+                            key={idx}
+                            href={buklet.pdfs[idx]}
+                            download
+                            className="relative h-80 block"
+                          >
                             <Image
                               src={img}
                               alt={`Image ${idx + 1}`}
@@ -175,7 +214,7 @@ export default function AdminPostBukletForm() {
                               objectFit="cover"
                               className="rounded-lg"
                             />
-                          </div>
+                          </a>
                         ))}
                         <div className="p-4">
                           <h3 className="text-xl font-bold">{buklet.name}</h3>
@@ -186,7 +225,6 @@ export default function AdminPostBukletForm() {
                 </div>
               )}
             </div>
-            
           </main>
         </div>
       </form>

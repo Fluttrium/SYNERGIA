@@ -6,8 +6,8 @@ import { MouseEvent } from "react";
 const downloadPDF1 = (e: MouseEvent<HTMLAnchorElement>) => {
   e.preventDefault();
   const link = document.createElement("a");
-  link.href = "docs/Устав Фонд СИНЕРГИЯ.pdf"; // или '/api/download-pdf' если используете API Route
-  link.download = "Политика конфиденциальности";
+  link.href = "docs/УставФондСИНЕРГИЯ.pdf"; // или '/api/download-pdf' если используете API Route
+  link.download = "Устав Фонда";
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

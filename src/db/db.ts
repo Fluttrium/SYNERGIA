@@ -179,25 +179,25 @@ export async function deletProject(id: string) {
 
 export async function addBukletPage(
   name: string,
-  images: string[]
+  images: string[],
+  pdfs: string[]
 ): Promise<number> {
-  const insertSql = `INSERT INTO buklets (name, image) VALUES (?, ?)`;
+  const insertSql = `INSERT INTO buklets (name, images, pdfs) VALUES (?, ?, ?)`;
 
   try {
-    // Преобразуем массив имен файлов в строку JSON
     const imagesJson = JSON.stringify(images);
-
+    const pdfsJson = JSON.stringify(pdfs);
 
     const result = await new Promise<number>((resolve, reject) => {
-      db.run(insertSql, [name, imagesJson], function (err) {
+      db.run(insertSql, [name, imagesJson, pdfsJson], function (err) {
         if (err) {
           console.error("Ошибка при вставке элемента:", err.message);
           reject(err);
+        } else {
+          const id = this.lastID; // Использование правильного контекста `this`
+          console.log(`Вставлена строка с ID ${id}`);
+          resolve(id);
         }
-
-        const id = this.lastID; 
-        console.log(`Вставлена строка с ID ${id}`);
-        resolve(id);
       });
     });
 
@@ -207,4 +207,3 @@ export async function addBukletPage(
     throw error;
   }
 }
-
