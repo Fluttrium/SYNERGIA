@@ -36,7 +36,7 @@ yarn-error.log*
 next-env.d.ts
 
 # Игнорировать файл collection.db
-collection.db
+#collection.db
 
 # Игнорировать папки public/uploads и public/uploadsProject
 /public/uploads/
