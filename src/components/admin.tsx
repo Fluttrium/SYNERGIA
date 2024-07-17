@@ -150,16 +150,15 @@ export default function Admin() {
     <div>
     <form className="form" onSubmit={handleSubmit(onSubmit)}>
       <div className="container mx-auto mt-28 py-36">
-      <button
-  type="submit"
-  className="inline-flex justify-center items-center px-4 text-white rounded bg-purple-500 transition-transform duration-300 ease-in-out transform hover:scale-105 focus:outline-none active:scale-95 mt-5"
-  style={{ width: "210px", height: "50px" }}
->
-<Link href={"admin_panel"}
->
-  Вернуться в меню
-</Link>
-</button>
+      <Link href="/admin/admin_panel">
+            <button
+              type="button"
+              className="inline-flex justify-center items-center px-4 text-white rounded bg-purple-500 transition-transform duration-300 ease-in-out transform hover:scale-105 focus:outline-none active:scale-95 mt-5"
+              style={{ width: "210px", height: "50px" }}
+            >
+              Вернуться в меню
+            </button>
+          </Link>
         <main className="main">
           <h1 className="title text-4xl font-bold text-center">
             Добавить новость
