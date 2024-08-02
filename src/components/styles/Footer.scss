@@ -1,0 +1,69 @@
+
+.relative {
+    position: relative;
+  }
+  
+  .bg-black {
+    background-color: #000;
+  }
+  
+  .text-white {
+    color: #fff;
+  }
+  
+  .py-8 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  
+  .text-3xl {
+    font-size: 1.875rem;
+  }
+  
+  .font-bold {
+    font-weight: 700;
+  }
+  
+  .text-sm {
+    font-size: 0.875rem;
+  }
+  
+  /* Стили для пульсации */
+  .atom-image2 {
+    animation: pulsate 2s infinite;
+    width: 150px; /* уменьшение размера атома */
+    height: 150px; /* уменьшение размера атома */
+  }
+  .footer-column {
+    display: block;
+    margin-bottom: 1rem;
+  }
+  
+  @keyframes pulsate {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(0.9); /* уменьшение размера атома */
+      opacity: 0.7;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+/* Стили для маленьких экранов */
+@media (max-width: 640px) {
+    .grid-cols-1 {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+  
+    /* Стили для каждого элемента в столбик */
+    .footer-column {
+      display: block;
+      margin-bottom: 1rem;
+    }
+  }
+  
