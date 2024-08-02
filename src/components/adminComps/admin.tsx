@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
@@ -128,40 +129,82 @@ export default function Admin({ initialBlogs }: NewsProps) {
   return (
     <main className="p-8">
       <h1 className="text-2xl font-bold mb-6">Добавление новостей</h1>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="space-y-4"
-        encType="multipart/form-data"
-      >
-        <input
-          type="text"
-          placeholder="Заголовок"
-          {...register("title", { required: true })}
-          className="w-full p-2 border border-gray-300 rounded"
-        />
-        <textarea
-          placeholder="Описание"
-          {...register("description", { required: true })}
-          className="w-full p-2 border border-gray-300 rounded"
-        />
-        <input
-          type="text"
-          placeholder="Ссылка"
-          {...register("link", { required: true })}
-          className="w-full p-2 border border-gray-300 rounded"
-        />
-        <input
-          type="file"
-          {...register("file", { required: true })}
-          className="w-full p-2 border border-gray-300 rounded"
-        />
-        <button
-          type="submit"
-          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-        >
-          Загрузить новость
-        </button>
-        {message && <p className="mt-4">{message}</p>}
+      <form className="form" onSubmit={handleSubmit(onSubmit)}>
+        <div className="container mx-auto mt-28 py-36">
+          <Link href="/admin/admin_panel">
+            <button
+              type="button"
+              className="inline-flex justify-center items-center px-4 text-white rounded bg-purple-500 transition-transform duration-300 ease-in-out transform hover:scale-105 focus:outline-none active:scale-95 mt-5"
+              style={{ width: "210px", height: "50px" }}
+            >
+              Вернуться в меню
+            </button>
+          </Link>
+          <main className="main">
+            <h1 className="title text-4xl font-bold text-center">
+              Добавить новость
+            </h1>
+            <label htmlFor="title" className="block font-medium text-2xl">
+              Заголовок:
+            </label>
+            <textarea
+              id="title"
+              rows={2}
+              {...register("title", { required: true })}
+              required
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            ></textarea>
+            <br />
+            <label
+              htmlFor="description"
+              className="block font-medium text-2xl "
+            >
+              Описание:
+            </label>
+            <textarea
+              id="description"
+              rows={4}
+              {...register("description", { required: true })}
+              required
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            ></textarea>
+            <label htmlFor="link" className="block font-medium text-2xl mt-5">
+              Ссылка:
+            </label>
+            <textarea
+              id="link"
+              rows={1}
+              {...register("link", { required: true })}
+              required
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            ></textarea>
+            <br />
+            <label
+              htmlFor="file"
+              className=" block font-medium text-2xl mt-5 mr-2"
+            >
+              Изображение:
+            </label>
+            <input
+              type="file"
+              id="file"
+              {...register("file", { required: true })}
+              accept="image/*"
+              required
+            />
+            <br />
+            <div className="flex justify-center">
+              <button
+                type="submit"
+                className="inline-flex justify-center items-center px-4 text-white rounded bg-purple-500 transition-transform duration-300 ease-in-out transform hover:scale-105 focus:outline-none active:scale-95 mt-5"
+                style={{ width: "210px", height: "50px" }}
+              >
+                Загрузить Проект
+              </button>
+            </div>
+            {message && <p>{message}</p>}
+          </main>
+        </div>
       </form>
       <NewsComponent />
     </main>

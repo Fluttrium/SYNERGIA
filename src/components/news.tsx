@@ -16,7 +16,6 @@ interface NewsProps {
 
 export default function News({ initialBlogs }: NewsProps) {
   const blogs = initialBlogs;
-  //const [blogs, setBlogs] = useState<NewsItem[]>(initialBlogs);
   const [loading, setLoading] = useState(false);
 
   return (
@@ -28,14 +27,13 @@ export default function News({ initialBlogs }: NewsProps) {
               key={blog.id}
               className="bg-white shadow-md rounded-lg overflow-hidden"
             >
-              <div className="overflow-hidden">
+              <div className="overflow-hidden h-64 w-64">
                 <a href={blog.link}>
                   <img
                     src={blog.image}
                     alt={blog.title}
-                    width={500}
-                    height={500}
-                    className="w-full h-64 object-left object-cover transition-transform duration-300 hover:scale-105 borderRadius: '10px',"
+                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                    style={{ borderRadius: "10px" }}
                   />
                 </a>
               </div>
