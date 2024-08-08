@@ -6,8 +6,10 @@ export async function POST(request: NextRequest) {
   const { email, name, message } = await request.json();
 
   const transport = nodemailer.createTransport({
-    host: "smtp.beget.com",
-    port: 2525,
+   
+    host: "smtp.yandex.ru",
+    port: 465,
+    secure: true,
 
     /* 
       setting service as 'gmail' is same as providing these setings:
@@ -19,14 +21,14 @@ export async function POST(request: NextRequest) {
       https://github.com/nodemailer/nodemailer/blob/master/lib/well-known/services.json
   */
     auth: {
-      user: "info@fluttrium.ru",
-      pass: "CN*3m1fGt1dw",
+      user: "sinergyasinergya@yandex.ru",
+      pass: "zbxzthmmvfyspcrk",
     },
   });
 
   const mailOptions: Mail.Options = {
-    from: "info@fluttrium.ru",
-    to: "info@fluttrium.ru",
+    from: "sinergyasinergya@yandex.ru",
+    to: "maximov.roman@outlook.com",
     // cc: email, (uncomment this line if you want to send a copy to the sender)
     subject: `Message from ${name} (${email})`,
     text: message,

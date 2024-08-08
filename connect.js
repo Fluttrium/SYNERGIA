@@ -13,7 +13,7 @@ const db = new sqlite3.Database(
 
 // Вставка данных
 const insertUserSql = `INSERT INTO users (username, password) VALUES (?, ?)`;
-const userValue = ["synergia@syner.com", "Syner2024"];
+const userValue = ["info@synergia.ru", "Synergia2024!"];
 
 db.serialize(() => {
   db.run(
