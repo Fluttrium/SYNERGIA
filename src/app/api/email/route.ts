@@ -6,7 +6,6 @@ export async function POST(request: NextRequest) {
   const { email, name, message } = await request.json();
 
   const transport = nodemailer.createTransport({
-   
     host: "smtp.yandex.ru",
     port: 465,
     secure: true,
@@ -21,14 +20,14 @@ export async function POST(request: NextRequest) {
       https://github.com/nodemailer/nodemailer/blob/master/lib/well-known/services.json
   */
     auth: {
-      user: "sinergyasinergya@yandex.ru",
-      pass: "zbxzthmmvfyspcrk",
+      user: "sinergyasinergya",
+      pass: "qqsrpnkcbjhaqrcz",
     },
   });
 
   const mailOptions: Mail.Options = {
     from: "sinergyasinergya@yandex.ru",
-    to: "maximov.roman@outlook.com",
+    to: "fond.synergy@mail.ru",
     // cc: email, (uncomment this line if you want to send a copy to the sender)
     subject: `Message from ${name} (${email})`,
     text: message,
