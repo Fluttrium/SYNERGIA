@@ -21,7 +21,7 @@ export default function Home() {
       <Faq />
       <Anket />
       <Form />
-      <NewsSection />
+      
     </>
   );
 }
