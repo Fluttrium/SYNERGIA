@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { sendEmail } from "@/utils/send-email";
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import {saveReport} from "@/utils/save-report";
 
 export type FormData = {
     name: string;
@@ -42,7 +43,8 @@ const Form: React.FC = () => {
             // Проверяем результат проверки ReCaptcha
             if (result.success) {
                 console.log(`ReCaptcha success with score: ${result.score}`);
-                sendEmail(data); // Вызов sendEmail только если проверка ReCaptcha успешна
+                sendEmail(data); // Вызов   sendEmail только если проверка ReCaptcha успешна
+                saveReport(data);
             } else {
                 console.error(`ReCaptcha verification failed with score: ${result.score}`);
             }
