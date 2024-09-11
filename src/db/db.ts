@@ -371,3 +371,29 @@ export async function addReport(report: Omit<Report, "id">, p0: (err: any) => vo
         });
     });
 }
+//функция получения всех репортов
+export async function fetchReportsFromDB(): Promise<any[]> {
+    const selectSql = `SELECT *
+                       FROM report`;
+
+    return new Promise<any[]>((resolve, reject) => {
+        db.all(selectSql, (err, rows) => {
+            if (err) {
+                console.error(
+                    "Ошибка при получении репортов из базы данных:",
+                    err.message
+                );
+                reject(err);
+            }
+
+            const report = rows.map((row: any) => ({
+                id: row.id,
+                email: row.email,
+                name: row.name,
+                message: row.message,
+            }));
+
+            resolve(report);
+        });
+    });
+}
