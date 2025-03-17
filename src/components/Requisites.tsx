@@ -53,7 +53,7 @@ export default function QrBlock() {
               fond.synergy@mail.ru
             </p>
             <p>
-              <span className="font-semibold">Президент Фонда «ОРИЕНТИР»:</span>{" "}
+              <span className="font-semibold">Президент Фонда «СИНЕРГИЯ»:</span>{" "}
               Харитонов Владислав Сергеевич
             </p>
           </div>

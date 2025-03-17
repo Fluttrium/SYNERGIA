@@ -29,7 +29,7 @@ const Hero = () => {
     <section className="relative h-screen">
       <video
         className="fixed inset-0 w-full h-full object-cover blur-sm"
-        src="/Dobrynya.mp4"
+        src="/spbvideo.mp4"
         autoPlay
         muted
         loop

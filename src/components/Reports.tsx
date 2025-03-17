@@ -17,73 +17,32 @@ export default function Reports() {
         </h2>
         <ul className="grid grid-cols-1 gap-4">
   <li className="rounded-lg overflow-hidden shadow-md bg-gray-100 hover:bg-gray-200 transition duration-300 ease-in-out">
-    <a href="reports/OTCHET-MINYUST_FSiESLO_2016.pdf" download className="block p-4 text-center">
-      <p className="font-semibold">Отчет «ФОНД С и ЭС ЛО» в Министерство юстиции Российской Федерации за 2016 год</p>
+    <a href="/reports/ОН 0001-2022.pdf" download className="block p-4 text-center">
+      <p className="font-semibold">Отчет о деятельности некоммерческой организации и о персональном составе ее руководящих органов и работников
+за 2022 г.
+</p>
     </a>
   </li>
   <li className="rounded-lg overflow-hidden shadow-md bg-gray-100 hover:bg-gray-200 transition duration-300 ease-in-out">
-    <a href="reports/OTCHET-MINYUST_FSiESLO_2017.pdf" download className="block p-4 text-center">
-      <p className="font-semibold">Отчет «ФОНД С и ЭС ЛО» в Министерство юстиции Российской Федерации за 2017 год</p>
+    <a href="/reports/ОН 0002-2022.pdf" download className="block p-4 text-center">
+      <p className="font-semibold">Отчет
+о целях расходования некоммерческой организацией денежных средств
+и использования иного имущества, в том числе полученных
+от иностранных государств, их государственных органов, международных и иностранных организаций, иностранных граждан, лиц без гражданства либо уполномоченных ими лиц, и (или) граждан Российской Федерации или российских юридических лиц, получающих денежные средства и иное имущество от указанных источников, либо действующих в качестве посредников при получении таких денежных средств и (или) иного имущества, и (или) от российских юридических лиц, бенефициарными владельцами которых в значении, определенном пунктом 8 статьи 6.1 Федерального закона от 07.08.2001 No 115-ФЗ "О противодействии легализации (отмыванию) доходов, полученных преступным путем,
+и финансированию терроризма", являются иностранные граждане или лица без гражданства
+за 2022 г.</p>
     </a>
   </li>
   <li className="rounded-lg overflow-hidden shadow-md bg-gray-100 hover:bg-gray-200 transition duration-300 ease-in-out">
-    <a href="reports/OTCHET-MINYUST_FSiESLO_2018.pdf" download className="block p-4 text-center">
-      <p className="font-semibold">Отчет «ФОНД С и ЭС ЛО» в Министерство юстиции Российской Федерации за 2018 год</p>
+    <a href="/reports/ОН0001-2023.pdf" download className="block p-4 text-center">
+      <p className="font-semibold">Отчет о деятельности некоммерческой организации и о персональном составе ее руководящих органов и работников
+      за 2023 г.</p>
     </a>
   </li>
   <li className="rounded-lg overflow-hidden shadow-md bg-gray-100 hover:bg-gray-200 transition duration-300 ease-in-out">
-    <a href="reports/OTCHET-MINYUST_FSiESLO_2019.pdf" download className="block p-4 text-center">
-      <p className="font-semibold">Отчет «ФОНД С и ЭС ЛО» в Министерство юстиции Российской Федерации за 2019 год</p>
-    </a>
-  </li>
-  <li className="rounded-lg overflow-hidden shadow-md bg-gray-100 hover:bg-gray-200 transition duration-300 ease-in-out">
-    <a href="reports/OTCHET-MINYUST_FSESiRSZ_2020.pdf" download className="block p-4 text-center">
-      <p className="font-semibold">Отчет «ФОНД С и ЭС ЛО» в Министерство юстиции Российской Федерации за 2020 год</p>
-    </a>
-  </li>
-  <li className="rounded-lg overflow-hidden shadow-md bg-gray-100 hover:bg-gray-200 transition duration-300 ease-in-out">
-    <a href="reports/OTCHET-MINYUST_FSESiRSZ_2021.pdf" download className="block p-4 text-center">
-      <p className="font-semibold">Отчет «ФОНД С и ЭС ЛО» в Министерство юстиции Российской Федерации за 2021 год</p>
-    </a>
-  </li>
-  <li className="rounded-lg overflow-hidden shadow-md bg-gray-100 hover:bg-gray-200 transition duration-300 ease-in-out">
-    <a href="reports/2014.pdf" download className="block p-4 text-center">
-      <p className="font-semibold">Отчет Фонда поддержки добровольного переселения соотечественников «ОРИЕНТИР» в Министерство юстиции Российской Федерации за 2014 год</p>
-    </a>
-  </li>
-  <li className="rounded-lg overflow-hidden shadow-md bg-gray-100 hover:bg-gray-200 transition duration-300 ease-in-out">
-    <a href="reports/2015.pdf" download className="block p-4 text-center">
-      <p className="font-semibold">Отчет Фонда поддержки добровольного переселения соотечественников «ОРИЕНТИР» в Министерство юстиции Российской Федерации за 2015 год</p>
-    </a>
-  </li>
-  <li className="rounded-lg overflow-hidden shadow-md bg-gray-100 hover:bg-gray-200 transition duration-300 ease-in-out">
-    <a href="reports/2016.pdf" download className="block p-4 text-center">
-      <p className="font-semibold">Отчет Фонда поддержки добровольного переселения соотечественников «ОРИЕНТИР» в Министерство юстиции Российской Федерации за 2016 год</p>
-    </a>
-  </li>
-  <li className="rounded-lg overflow-hidden shadow-md bg-gray-100 hover:bg-gray-200 transition duration-300 ease-in-out">
-    <a href="reports/2017.pdf" download className="block p-4 text-center">
-      <p className="font-semibold">Отчет Фонда поддержки добровольного переселения соотечественников «ОРИЕНТИР» в Министерство юстиции Российской Федерации за 2017 год</p>
-    </a>
-  </li>
-  <li className="rounded-lg overflow-hidden shadow-md bg-gray-100 hover:bg-gray-200 transition duration-300 ease-in-out">
-    <a href="reports/2018.pdf" download className="block p-4 text-center">
-      <p className="font-semibold">Отчет Фонда поддержки добровольного переселения соотечественников «ОРИЕНТИР» в Министерство юстиции Российской Федерации за 2018 годs</p>
-    </a>
-  </li>
-  <li className="rounded-lg overflow-hidden shadow-md bg-gray-100 hover:bg-gray-200 transition duration-300 ease-in-out">
-    <a href="reports/2019.pdf" download className="block p-4 text-center">
-      <p className="font-semibold">Отчет Фонда поддержки добровольного переселения соотечественников «ОРИЕНТИР» в Министерство юстиции Российской Федерации за 2019 год</p>
-    </a>
-  </li>
-  <li className="rounded-lg overflow-hidden shadow-md bg-gray-100 hover:bg-gray-200 transition duration-300 ease-in-out">
-    <a href="reports/2020.pdf" download className="block p-4 text-center">
-      <p className="font-semibold">Отчет Фонда поддержки добровольного переселения соотечественников «ОРИЕНТИР» в Министерство юстиции Российской Федерации за 2020 год</p>
-    </a>
-  </li>
-  <li className="rounded-lg overflow-hidden shadow-md bg-gray-100 hover:bg-gray-200 transition duration-300 ease-in-out">
-    <a href="reports/2020.pdf" download className="block p-4 text-center">
-      <p className="font-semibold">Отчет Фонда поддержки добровольного переселения соотечественников «ОРИЕНТИР» в Министерство юстиции Российской Федерации за 2021 год</p>
+    <a href="/reports/ОН0002-2023.pdf" download className="block p-4 text-center">
+      <p className="font-semibold">Отчет о деятельности некоммерческой организации и о персональном составе ее руководящих органов и работников
+      за 2023 г.</p>
     </a>
   </li>
 </ul>
