@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "4444:3000"
+      - "4444:4444"
     environment:
       - NODE_ENV=production
       - NEXT_TELEMETRY_DISABLED=1

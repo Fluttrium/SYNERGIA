@@ -55,9 +55,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/collection.db ./
 # Устанавливаем права доступа
 USER nextjs
 
-EXPOSE 3000
+EXPOSE 4444
 
-ENV PORT 3000
+ENV PORT 4444
 ENV HOSTNAME "0.0.0.0"
 
 # Запускаем приложение
