@@ -27,7 +27,7 @@ export default function Home() {
                 <Anket />
                 <Form />
                 <NewsSection />
-                <Footer />
+                {/*<Footer />*/}
             </GoogleReCaptchaProviderWrapper>
         </>
     );
