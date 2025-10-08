@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  synergia-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4444:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+    volumes:
+      # Монтируем базу данных для сохранения данных
+      - ./collection.db:/app/collection.db
+      # Монтируем папку с загруженными файлами (если есть)
+      - ./public/uploads:/app/public/uploads
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Опционально: Nginx для проксирования (если нужен)
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - synergia-app
+    restart: unless-stopped
+    profiles:
+      - nginx
