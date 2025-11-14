@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { checkDatabaseConnection } from '@/lib/prisma';
+
+export const runtime = "nodejs";
 
 export async function GET() {
   try {
@@ -9,14 +11,30 @@ export async function GET() {
         { 
           status: 'error', 
           message: 'DATABASE_URL is not configured',
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
+          details: 'Please set DATABASE_URL environment variable in Vercel settings'
         },
         { status: 500 }
       );
     }
 
-    // Проверяем подключение к базе данных через Prisma
-    await prisma.$queryRaw`SELECT 1`;
+    // Проверяем подключение к базе данных
+    const connectionCheck = await checkDatabaseConnection();
+    
+    if (!connectionCheck.connected) {
+      console.error('Database connection failed:', connectionCheck);
+      return NextResponse.json(
+        { 
+          status: 'error', 
+          message: 'Database connection failed',
+          error: connectionCheck.error,
+          code: connectionCheck.code,
+          timestamp: new Date().toISOString(),
+          details: connectionCheck.meta || 'Check DATABASE_URL format and database server availability'
+        },
+        { status: 500 }
+      );
+    }
     
     return NextResponse.json(
       { 
@@ -34,6 +52,7 @@ export async function GET() {
         status: 'error', 
         message: 'Database connection failed',
         error: error?.message || 'Unknown error',
+        code: error?.code,
         timestamp: new Date().toISOString()
       },
       { status: 500 }
