@@ -128,3 +128,31 @@ video::-webkit-media-controls-overlay-enclosure {
   visibility: hidden !important;
   pointer-events: none !important;
 }
+
+/* Дополнительные правила для полного скрытия overlay кнопки */
+video > * {
+  pointer-events: none !important;
+}
+
+/* Скрываем любые overlay элементы через z-index */
+video::before,
+video::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Скрываем все возможные overlay элементы */
+video [class*="overlay"],
+video [class*="play-button"],
+video [id*="overlay"],
+video [id*="play-button"] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+  top: -9999px !important;
+}
