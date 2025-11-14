@@ -11,13 +11,21 @@
 
 ### 2. Запустите миграцию
 
+**Миграция всех данных (рекомендуется):**
+```bash
+npm run migrate:all
+```
+
+**Или по отдельности:**
+
+Буклеты и брошюры:
 ```bash
 npm run migrate:buklets
 ```
 
-Или напрямую:
+Новости и проекты:
 ```bash
-node migrate-buklets-brochures.js
+npm run migrate:news
 ```
 
 ### 3. Что мигрируется:
@@ -34,6 +42,14 @@ node migrate-buklets-brochures.js
   - Группы файлов (`brochure_file_groups`)
   - Изображения (`brochure_images`)
   - PDF файлы (`brochure_pdfs`)
+
+- ✅ **Новости** (`items`)
+  - Заголовок, описание, изображение
+  - Ссылка и Markdown контент (body)
+
+- ✅ **Проекты** (`project`)
+  - Заголовок, описание, изображение
+  - Ссылка
 
 ### 4. Что делает скрипт:
 

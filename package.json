@@ -11,7 +11,9 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "migrate:buklets": "node migrate-buklets-brochures.js"
+    "migrate:buklets": "node migrate-buklets-brochures.js",
+    "migrate:news": "node migrate-news-projects.js",
+    "migrate:all": "node migrate-buklets-brochures.js && node migrate-news-projects.js"
   },
   "dependencies": {
     "@prisma/client": "^6.19.0",
