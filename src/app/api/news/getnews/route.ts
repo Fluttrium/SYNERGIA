@@ -1,15 +1,10 @@
 import { NextResponse } from "next/server";
-import { closeDatabase, fetchNewsFromDatabase, initDatabase } from "@/db/db";
+import { fetchNewsFromDatabase } from "@/db/db";
 
-// Инициализируем базу данных при запуске сервера
-initDatabase().catch((err) => {
-  console.error("Не удалось инициализировать базу данных:", err);
-  process.exit(1);
-});
+export const runtime = "nodejs";
 
 export async function GET() {
   try {
-    await initDatabase();
     const news = await fetchNewsFromDatabase();
     console.log("✅ API: Returning", news.length, "news items");
     

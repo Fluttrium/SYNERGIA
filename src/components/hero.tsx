@@ -73,7 +73,7 @@ const Hero = () => {
           muted
           loop
           playsInline
-          preload="auto"
+          preload="metadata"
           onError={(e) => {
             console.error("Ошибка загрузки видео:", e);
             setVideoError(true);
@@ -88,6 +88,11 @@ const Hero = () => {
         ></video>
       ) : (
         <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 z-0"></div>
+      )}
+      
+      {/* Fallback градиент пока видео загружается */}
+      {!videoLoaded && !videoError && (
+        <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 z-0 animate-pulse"></div>
       )}
 
       <div className="relative z-20 h-full flex items-center justify-center text-center text-white px-4 md:px-20">

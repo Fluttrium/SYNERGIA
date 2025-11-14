@@ -3,7 +3,12 @@ import { Nunito_Sans } from "next/font/google";
 import "./(default)/globals.css";
 import { AuthProviderWrapper } from "@/components/providers/auth-provider-wrapper";
 
-const font = Nunito_Sans({ subsets: ["cyrillic"] });
+const font = Nunito_Sans({ 
+  subsets: ["cyrillic"],
+  display: 'swap',
+  preload: true,
+  fallback: ['system-ui', 'arial']
+});
 
 export const metadata: Metadata = {
   title: "Фонд «СИНЕРГИЯ»",

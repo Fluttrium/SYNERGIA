@@ -1,4 +1,5 @@
 import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
 import Hero from "@/components/hero";
 import About2 from "@/components/about2";
 import About1 from "@/components/about1";
@@ -15,6 +16,14 @@ export const revalidate = 0; // отключение кэширования
 const GoogleReCaptchaProviderWrapper = dynamic(
     () => import('@/components/GoogleReCaptchaProviderWrapper'),
     { ssr: false }
+);
+
+const NewsSectionWrapperLazy = dynamic(
+    () => import('./news-section-wrapper'),
+    { 
+        ssr: true,
+        loading: () => <div className="min-h-[400px] flex items-center justify-center"><div className="text-gray-500">Загрузка новостей...</div></div>
+    }
 );
 
 export default function Home() {
@@ -40,7 +49,9 @@ export default function Home() {
                 
                 {/* Новости - актуальная информация */}
                 <div id="Новости">
-                    <NewsSectionWrapper />
+                    <Suspense fallback={<div className="min-h-[400px] flex items-center justify-center"><div className="text-gray-500">Загрузка новостей...</div></div>}>
+                        <NewsSectionWrapper />
+                    </Suspense>
                 </div>
                 
                 {/* Анкета для обратной связи */}

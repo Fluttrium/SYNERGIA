@@ -1,16 +1,7 @@
-"use server";
-import { NextRequest, NextResponse } from "next/server";
-import {
-  closeDatabase,
-  fetchProjectsFromDatabase,
-  initDatabase,
-} from "@/db/db"; // Путь к функции извлечения данных из базы
+import { NextResponse } from "next/server";
+import { fetchProjectsFromDatabase } from "@/db/db";
 
-// Инициализируем базу данных при запуске сервера
-initDatabase().catch((err) => {
-  console.error("Не удалось инициализировать базу данных:", err);
-  process.exit(1); // Завершаем процесс, если инициализация базы данных не удалась
-});
+export const runtime = "nodejs";
 
 export async function GET() {
   try {
@@ -25,9 +16,3 @@ export async function GET() {
     );
   }
 }
-
-// Убедимся, что закрываем соединение с базой данных при завершении работы сервера
-process.on("SIGINT", async () => {
-  await closeDatabase();
-  process.exit();
-});
