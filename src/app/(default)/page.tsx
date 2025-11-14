@@ -18,14 +18,6 @@ const GoogleReCaptchaProviderWrapper = dynamic(
     { ssr: false }
 );
 
-const NewsSectionWrapperLazy = dynamic(
-    () => import('./news-section-wrapper'),
-    { 
-        ssr: true,
-        loading: () => <div className="min-h-[400px] flex items-center justify-center"><div className="text-gray-500">Загрузка новостей...</div></div>
-    }
-);
-
 export default function Home() {
     return (
         <>
