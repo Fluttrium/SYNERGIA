@@ -33,15 +33,26 @@ const Hero = () => {
     // Убеждаемся, что видео начинает воспроизведение
     const video = videoRef.current;
     if (video) {
-      const handleCanPlay = () => {
+      // Убираем все контролы и настройки для автовоспроизведения
+      video.controls = false;
+      video.setAttribute('playsinline', 'true');
+      video.setAttribute('webkit-playsinline', 'true');
+      
+      const handleCanPlay = async () => {
         setVideoLoaded(true);
-        video.play().catch((error) => {
+        try {
+          await video.play();
+          // Убираем паузу, если видео было приостановлено
+          if (video.paused) {
+            video.play();
+          }
+        } catch (error: any) {
           console.error("Ошибка воспроизведения видео:", error);
           // Не устанавливаем ошибку, если это просто политика автовоспроизведения
-          if (error.name !== 'NotAllowedError') {
+          if (error.name !== 'NotAllowedError' && error.name !== 'NotSupportedError') {
             setVideoError(true);
           }
-        });
+        }
       };
 
       const handleError = () => {
@@ -49,15 +60,30 @@ const Hero = () => {
         setVideoError(true);
       };
 
-      video.addEventListener('canplay', handleCanPlay);
-      video.addEventListener('error', handleError);
+      const handlePlay = () => {
+        setVideoLoaded(true);
+      };
 
-      // Пытаемся загрузить видео
+      video.addEventListener('canplay', handleCanPlay);
+      video.addEventListener('canplaythrough', handleCanPlay);
+      video.addEventListener('error', handleError);
+      video.addEventListener('play', handlePlay);
+
+      // Пытаемся загрузить и воспроизвести видео
       video.load();
+      
+      // Пытаемся воспроизвести после небольшой задержки
+      setTimeout(() => {
+        if (video.readyState >= 2) {
+          video.play().catch(console.error);
+        }
+      }, 100);
 
       return () => {
         video.removeEventListener('canplay', handleCanPlay);
+        video.removeEventListener('canplaythrough', handleCanPlay);
         video.removeEventListener('error', handleError);
+        video.removeEventListener('play', handlePlay);
       };
     }
   }, []);
@@ -67,13 +93,16 @@ const Hero = () => {
       {!videoError ? (
         <video
           ref={videoRef}
-          className="absolute inset-0 w-full h-full object-cover blur-sm z-0"
+          className="absolute inset-0 w-full h-full object-cover blur-sm z-0 pointer-events-none"
           src="/spbvideo.mp4"
           autoPlay
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
+          disablePictureInPicture
+          disableRemotePlayback
+          controls={false}
           onError={(e) => {
             console.error("Ошибка загрузки видео:", e);
             setVideoError(true);
@@ -81,8 +110,17 @@ const Hero = () => {
           onLoadedData={() => {
             console.log("Видео загружено успешно");
             setVideoLoaded(true);
+            if (videoRef.current) {
+              videoRef.current.play().catch(console.error);
+            }
           }}
           onCanPlay={() => {
+            setVideoLoaded(true);
+            if (videoRef.current) {
+              videoRef.current.play().catch(console.error);
+            }
+          }}
+          onPlay={() => {
             setVideoLoaded(true);
           }}
         ></video>
