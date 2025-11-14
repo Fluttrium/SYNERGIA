@@ -33,7 +33,17 @@ export interface NewsNew {
 //открытие базы данных (заглушка для совместимости)
 export async function initDatabase() {
   // Prisma не требует явной инициализации
-  console.log("Prisma database connection ready.");
+  // Проверяем подключение при инициализации
+  try {
+    if (!process.env.DATABASE_URL) {
+      throw new Error('DATABASE_URL is not set in environment variables');
+    }
+    await prisma.$connect();
+    console.log("Prisma database connection ready.");
+  } catch (error) {
+    console.error("Failed to connect to database:", error);
+    throw error;
+  }
 }
 
 //закрытие базы данных (заглушка для совместимости)
