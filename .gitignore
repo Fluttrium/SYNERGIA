@@ -40,3 +40,4 @@ yarn-error.log*
 /public/uploadsProjects/
 /public/uploadImgForBuklets/
 /src/generated/prisma
+.env.local
