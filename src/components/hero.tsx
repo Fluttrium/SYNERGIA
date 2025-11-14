@@ -81,7 +81,8 @@ const Hero = () => {
         <>
           <video
             ref={videoRef}
-            className="absolute inset-0 w-full h-full object-cover blur-sm z-0"
+            className="absolute inset-0 w-full h-full object-cover blur-sm z-0 hero-video"
+            id="hero-video"
             src="/spbvideo.mp4"
             muted
             autoPlay

@@ -156,3 +156,28 @@ video [id*="play-button"] {
   left: -9999px !important;
   top: -9999px !important;
 }
+
+/* Специфичные правила для hero видео */
+#hero-video.hero-video::-webkit-media-controls-overlay-play-button,
+.hero-video::-webkit-media-controls-overlay-play-button,
+video.hero-video::-webkit-media-controls-overlay-play-button {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+  top: -9999px !important;
+  z-index: -1 !important;
+}
+
+#hero-video.hero-video::-webkit-media-controls-overlay-enclosure,
+.hero-video::-webkit-media-controls-overlay-enclosure,
+video.hero-video::-webkit-media-controls-overlay-enclosure {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
