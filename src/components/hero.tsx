@@ -63,8 +63,11 @@ const Hero = () => {
     
     hideOverlay();
 
-    // Пытаемся запустить видео
-    const tryPlay = async () => {
+    // Принудительно начинаем загрузку видео
+    video.load();
+    
+    // Пытаемся запустить видео после загрузки метаданных
+    const handleCanPlay = async () => {
       try {
         await video.play();
       } catch (err) {
@@ -72,11 +75,22 @@ const Hero = () => {
       }
     };
     
-    tryPlay();
+    video.addEventListener('canplay', handleCanPlay, { once: true });
+    video.addEventListener('canplaythrough', handleCanPlay, { once: true });
+    
+    return () => {
+      video.removeEventListener('canplay', handleCanPlay);
+      video.removeEventListener('canplaythrough', handleCanPlay);
+    };
   }, []);
 
   return (
     <section className="relative h-screen overflow-hidden">
+      {/* Fallback градиент пока видео загружается */}
+      {!videoLoaded && !videoError && (
+        <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 z-0"></div>
+      )}
+      
       {!videoError ? (
         <>
           <video
@@ -88,7 +102,7 @@ const Hero = () => {
             autoPlay
             loop
             playsInline
-            preload="auto"
+            preload="metadata"
             disablePictureInPicture
             controls={false}
             style={{
@@ -96,6 +110,16 @@ const Hero = () => {
               pointerEvents: "none",
             }}
             onContextMenu={(e) => e.preventDefault()}
+            onLoadStart={() => {
+              // Начинаем загрузку видео
+              if (videoRef.current) {
+                videoRef.current.load();
+              }
+            }}
+            onLoadedMetadata={() => {
+              // Метаданные загружены, начинаем загрузку данных
+              setVideoLoaded(true);
+            }}
             onError={(e) => {
               console.error("Ошибка загрузки видео:", e);
               setVideoError(true);
@@ -105,6 +129,10 @@ const Hero = () => {
               videoRef.current?.play().catch(() => {});
             }}
             onCanPlay={() => {
+              setVideoLoaded(true);
+              videoRef.current?.play().catch(() => {});
+            }}
+            onCanPlayThrough={() => {
               setVideoLoaded(true);
               videoRef.current?.play().catch(() => {});
             }}
