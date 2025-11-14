@@ -114,12 +114,6 @@ video::-webkit-media-controls-overlay-play-button {
 }
 
 /* Дополнительные селекторы для разных браузеров */
-video::--webkit-media-controls-overlay-play-button {
-  display: none !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-}
 
 /* Скрываем overlay для Firefox */
 video::-moz-media-controls {
