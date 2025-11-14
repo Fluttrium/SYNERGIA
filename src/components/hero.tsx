@@ -63,24 +63,40 @@ const Hero = () => {
     
     hideOverlay();
 
-    // Принудительно начинаем загрузку видео
-    video.load();
-    
-    // Пытаемся запустить видео после загрузки метаданных
+    // Пытаемся запустить видео после загрузки
     const handleCanPlay = async () => {
       try {
-        await video.play();
+        if (video.paused) {
+          await video.play();
+          console.log("Видео воспроизводится");
+        }
+      } catch (err) {
+        console.warn("Автоплей заблокирован:", err);
+      }
+    };
+    
+    const handleCanPlayThrough = async () => {
+      try {
+        if (video.paused) {
+          await video.play();
+          console.log("Видео готово к воспроизведению");
+        }
       } catch (err) {
         console.warn("Автоплей заблокирован:", err);
       }
     };
     
     video.addEventListener('canplay', handleCanPlay, { once: true });
-    video.addEventListener('canplaythrough', handleCanPlay, { once: true });
+    video.addEventListener('canplaythrough', handleCanPlayThrough, { once: true });
+    
+    // Пытаемся запустить сразу, если видео уже готово
+    if (video.readyState >= 3) {
+      video.play().catch(console.warn);
+    }
     
     return () => {
       video.removeEventListener('canplay', handleCanPlay);
-      video.removeEventListener('canplaythrough', handleCanPlay);
+      video.removeEventListener('canplaythrough', handleCanPlayThrough);
     };
   }, []);
 
@@ -102,7 +118,7 @@ const Hero = () => {
             autoPlay
             loop
             playsInline
-            preload="metadata"
+            preload="auto"
             disablePictureInPicture
             controls={false}
             style={{
@@ -110,14 +126,9 @@ const Hero = () => {
               pointerEvents: "none",
             }}
             onContextMenu={(e) => e.preventDefault()}
-            onLoadStart={() => {
-              // Начинаем загрузку видео
-              if (videoRef.current) {
-                videoRef.current.load();
-              }
-            }}
             onLoadedMetadata={() => {
-              // Метаданные загружены, но не помечаем как загруженное до полной готовности
+              // Метаданные загружены
+              console.log("Видео метаданные загружены");
             }}
             onError={(e) => {
               console.error("Ошибка загрузки видео:", e);
