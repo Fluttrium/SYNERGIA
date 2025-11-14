@@ -35,8 +35,13 @@ const Hero = () => {
     if (video) {
       // Убираем все контролы и настройки для автовоспроизведения
       video.controls = false;
+      video.removeAttribute('controls');
       video.setAttribute('playsinline', 'true');
       video.setAttribute('webkit-playsinline', 'true');
+      video.setAttribute('x-webkit-airplay', 'deny');
+      
+      // Убеждаемся, что контролы отключены
+      video.removeAttribute('controls');
       
       const handleCanPlay = async () => {
         setVideoLoaded(true);
@@ -91,39 +96,43 @@ const Hero = () => {
   return (
     <section className="relative h-screen overflow-hidden">
       {!videoError ? (
-        <video
-          ref={videoRef}
-          className="absolute inset-0 w-full h-full object-cover blur-sm z-0 pointer-events-none"
-          src="/spbvideo.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          disablePictureInPicture
-          disableRemotePlayback
-          controls={false}
-          onError={(e) => {
-            console.error("Ошибка загрузки видео:", e);
-            setVideoError(true);
-          }}
-          onLoadedData={() => {
-            console.log("Видео загружено успешно");
-            setVideoLoaded(true);
-            if (videoRef.current) {
-              videoRef.current.play().catch(console.error);
-            }
-          }}
-          onCanPlay={() => {
-            setVideoLoaded(true);
-            if (videoRef.current) {
-              videoRef.current.play().catch(console.error);
-            }
-          }}
-          onPlay={() => {
-            setVideoLoaded(true);
-          }}
-        ></video>
+        <>
+          <video
+            ref={videoRef}
+            className="absolute inset-0 w-full h-full object-cover blur-sm z-0 pointer-events-none"
+            src="/spbvideo.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            disablePictureInPicture
+            disableRemotePlayback
+            style={{
+              objectFit: 'cover',
+            }}
+            onError={(e) => {
+              console.error("Ошибка загрузки видео:", e);
+              setVideoError(true);
+            }}
+            onLoadedData={() => {
+              console.log("Видео загружено успешно");
+              setVideoLoaded(true);
+              if (videoRef.current) {
+                videoRef.current.play().catch(console.error);
+              }
+            }}
+            onCanPlay={() => {
+              setVideoLoaded(true);
+              if (videoRef.current) {
+                videoRef.current.play().catch(console.error);
+              }
+            }}
+            onPlay={() => {
+              setVideoLoaded(true);
+            }}
+          />
+        </>
       ) : (
         <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 z-0"></div>
       )}
