@@ -5,7 +5,7 @@ import "@/components/styles/Footer.scss";
 
 export default function Footer() {
   return (
-    <section className="fixed bottom-0 left-0 right-0 bg-black text-white z-50">
+    <section className="relative bg-black text-white">
       <div className="container mx-auto px-4 py-8 md:grid md:grid-cols-3 md:gap-8">
         {/* Колонки для больших экранов */}
         <div className="hidden md:block col-span-1">
