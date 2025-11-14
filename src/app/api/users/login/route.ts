@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 
 export const runtime = "nodejs";
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 interface LoginRequest {
   username: string;
