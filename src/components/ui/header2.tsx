@@ -7,6 +7,7 @@ import BurgerDropdown from "./dropdown/burger_drop";
 import Link from "next/link";
 import { GiHamburgerMenu } from "react-icons/gi";
 import Image from "next/image";
+import AuthButton from "@/components/ui/auth-button";
 
 export interface MenuItem {
   title: string;
@@ -26,7 +27,7 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed w-screen bg-white/90 z-10 border-gray-200 px-4 lg:px-6 py-5">
+    <header className="fixed w-screen bg-white/90 z-50 border-gray-200 px-4 lg:px-6 py-5">
       <div className="flex md:justify-start justify-between items-center mx-auto max-w-screen-xl">
         <div className="flex flex-row space-x-2">
           <Link className="hidden md:flex flex-col justify-items-end" href="/">
@@ -113,21 +114,30 @@ const Header = () => {
           ))}
         </div>
 
-        {menuItemsForBurger.map((item, index) => (
-          <React.Fragment key={`burger_${index}`}>
-            {item.hasOwnProperty("children") ? (
-              <BurgerDropdown item={item} />
-            ) : (
-              <Link
-                className="hover:text-blue-500"
-                href={item?.route || ""}
-                key={`burger_${index}`}
-              >
-                {item.title}
-              </Link>
-            )}
-          </React.Fragment>
-        ))}
+        {/* Кнопка авторизации для десктопа */}
+        <div className="hidden md:flex ml-auto">
+          <AuthButton />
+        </div>
+
+        {/* Мобильное меню и кнопка авторизации */}
+        <div className="flex md:hidden items-center space-x-3">
+          <AuthButton />
+          {menuItemsForBurger.map((item, index) => (
+            <React.Fragment key={`burger_${index}`}>
+              {item.hasOwnProperty("children") ? (
+                <BurgerDropdown item={item} />
+              ) : (
+                <Link
+                  className="hover:text-blue-500"
+                  href={item?.route || ""}
+                  key={`burger_${index}`}
+                >
+                  {item.title}
+                </Link>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
       </div>
       {isOpen && <Offcanvas onClose={closeOffcanvas} />}
     </header>
@@ -141,12 +151,16 @@ const menuItemsMig: MenuItem[] = [
     title: "Products",
     children: [
       {
-        title: "Буклеты",
+        title: "Буклеты и брошюры",
         route: "/buklet",
       },
       {
         title: "Услуги в сфере миграции",
         route: "/migration",
+      },
+      {
+        title: "СИНЕРГИЯ.Агрегатор",
+        route: "/synergia-aggregator",
       },
     ],
   },
@@ -222,8 +236,16 @@ const menuItemsForBurger: MenuItem[] = [
         route: "/news",
       },
       {
+        title: "Буклеты и брошюры",
+        route: "/buklet",
+      },
+      {
         title: "Услуги в сфере миграции",
         route: "/migration",
+      },
+      {
+        title: "СИНЕРГИЯ.Агрегатор",
+        route: "/synergia-aggregator",
       },
       {
         title: "Реквизиты",

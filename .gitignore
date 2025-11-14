@@ -39,3 +39,4 @@ yarn-error.log*
 /public/uploads/
 /public/uploadsProjects/
 /public/uploadImgForBuklets/
+/src/generated/prisma

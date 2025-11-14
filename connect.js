@@ -61,11 +61,26 @@ db.serialize(() => {
 
   db.run(
     `
+    CREATE TABLE IF NOT EXISTS buklet_file_groups (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      buklet_id INTEGER,
+      title TEXT NOT NULL,
+      description TEXT,
+      FOREIGN KEY (buklet_id) REFERENCES buklets (id)
+    );
+    `
+  );
+
+  db.run(
+    `
     CREATE TABLE IF NOT EXISTS buklet_images (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       buklet_id INTEGER,
+      group_id INTEGER,
       image BLOB,
-      FOREIGN KEY (buklet_id) REFERENCES buklets (id)
+      filename TEXT,
+      FOREIGN KEY (buklet_id) REFERENCES buklets (id),
+      FOREIGN KEY (group_id) REFERENCES buklet_file_groups (id)
     );
     `
   );
@@ -75,8 +90,65 @@ db.serialize(() => {
     CREATE TABLE IF NOT EXISTS buklet_pdfs (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       buklet_id INTEGER,
+      group_id INTEGER,
       pdf BLOB,
-      FOREIGN KEY (buklet_id) REFERENCES buklets (id)
+      filename TEXT,
+      FOREIGN KEY (buklet_id) REFERENCES buklets (id),
+      FOREIGN KEY (group_id) REFERENCES buklet_file_groups (id)
+    );
+    `
+  );
+
+  db.run(
+    `
+    CREATE TABLE IF NOT EXISTS brochures (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT,
+      language TEXT,
+      description TEXT,
+      main_image BLOB,
+      main_image_filename TEXT
+    );
+    `
+  );
+
+  db.run(
+    `
+    CREATE TABLE IF NOT EXISTS brochure_file_groups (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      brochure_id INTEGER,
+      title TEXT NOT NULL,
+      description TEXT,
+      link TEXT,
+      FOREIGN KEY (brochure_id) REFERENCES brochures (id)
+    );
+    `
+  );
+
+  db.run(
+    `
+    CREATE TABLE IF NOT EXISTS brochure_images (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      brochure_id INTEGER,
+      group_id INTEGER,
+      image BLOB,
+      filename TEXT,
+      FOREIGN KEY (brochure_id) REFERENCES brochures (id),
+      FOREIGN KEY (group_id) REFERENCES brochure_file_groups (id)
+    );
+    `
+  );
+
+  db.run(
+    `
+    CREATE TABLE IF NOT EXISTS brochure_pdfs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      brochure_id INTEGER,
+      group_id INTEGER,
+      pdf BLOB,
+      filename TEXT,
+      FOREIGN KEY (brochure_id) REFERENCES brochures (id),
+      FOREIGN KEY (group_id) REFERENCES brochure_file_groups (id)
     );
     `
   );

@@ -1,4 +1,6 @@
 import "./globals.css"
+import Footer from "@/components/ui/footer";
+import Header2 from "@/components/ui/header2";
 
 export default function DefaultLayout({
   children,
@@ -7,10 +9,11 @@ export default function DefaultLayout({
 }) {  
   return (
     <>
-      <main>
+      <div className="flex flex-col min-h-screen overflow-hidden">
+        <Header2 />
         {children}
-        
-      </main>
+        <Footer />
+      </div>
     </>
   )
 }

@@ -1,37 +1,37 @@
 import { NextRequest, NextResponse } from "next/server";
-import path from "path";
-import { writeFile, mkdir } from "fs/promises";
 import { initDatabase, addItem } from "@/db/db";
 
 export async function POST(req: NextRequest) {
   try {
-    await initDatabase(); // Initialize the database at the start of the request
+    await initDatabase();
 
     const formData = await req.formData();
     const file = formData.get("file") as File;
     const title = formData.get("title") as string;
     const description = formData.get("description") as string;
     const link = formData.get("link") as string;
+    const body = formData.get("body") as string || '';
 
     if (!file) {
       return NextResponse.json(
-        { error: "No files received." },
+        { error: "No file uploaded" },
         { status: 400 }
       );
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
-    // Сохраняем изображение как BLOB в базе данных
-    const news = {
+    
+    // Сохраняем новость в базе данных с Markdown контентом
+    const itemId = await addItem({
       title,
       description,
       image: buffer,
-      link,
-    };
-    const itemId = await addItem(news);
+      link: link || '#',
+      body,
+    });
 
     return NextResponse.json({
-      message: "Success",
+      message: "News created successfully",
       itemId,
       status: 201,
     });

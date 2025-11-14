@@ -7,7 +7,8 @@ import Anket from "@/components/anket";
 import Form from "@/components/form";
 
 import Footer from "@/components/ui/footer";
-import NewsSection from "../news/page";
+import NewsSectionWrapper from "./news-section-wrapper";
+import BrochuresSection from "@/components/brochures-section";
 
 export const revalidate = 0; // отключение кэширования
 
@@ -20,13 +21,34 @@ export default function Home() {
     return (
         <>
             <GoogleReCaptchaProviderWrapper>
+                {/* Главный баннер */}
                 <Hero />
+                
+                {/* О фонде - краткая информация */}
                 <About2 />
+                
+                {/* Брошюры для мигрантов - новая секция */}
+                <div id="Брошюры">
+                    <BrochuresSection />
+                </div>
+                
+                {/* Подробная информация о фонде */}
                 <About1 />
+                
+                {/* FAQ - часто задаваемые вопросы */}
                 <Faq />
+                
+                {/* Новости - актуальная информация */}
+                <div id="Новости">
+                    <NewsSectionWrapper />
+                </div>
+                
+                {/* Анкета для обратной связи */}
                 <Anket />
+                
+                {/* Форма обратной связи */}
                 <Form />
-                <NewsSection />
+                
                 {/*<Footer />*/}
             </GoogleReCaptchaProviderWrapper>
         </>

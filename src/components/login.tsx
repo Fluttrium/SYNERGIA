@@ -1,7 +1,10 @@
 "use client";
 
-import React, { useState, ChangeEvent, FormEvent } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
+import toast from "react-hot-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface FormData {
   username: string;
@@ -17,6 +20,16 @@ const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { login, checkAuth, user } = useAuth();
+
+  // Если пользователь уже авторизован, редиректим его
+  useEffect(() => {
+    if (user) {
+      const redirectTo = searchParams.get('redirect') || (user.role === 'admin' ? '/admin/admin_panel' : '/profile');
+      router.push(redirectTo);
+    }
+  }, [user, router, searchParams]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -38,38 +51,78 @@ const Login: React.FC = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
+        credentials: "include",
       });
 
       if (!response.ok) {
-        throw new Error("Login failed");
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || "Login failed");
       }
 
       const result = await response.json();
-      router.push("/admin/admin_panel");
-      console.log("Login successful:", result);
-    } catch (error) {
-      console.error("Error logging in:", error);
+      console.log("✅ Login successful:", result);
+
+      if (!result.user) {
+        throw new Error("No user data received");
+      }
+
+      // Показываем уведомление об успешном входе
+      const userName = result.user.name || result.user.username || "Пользователь";
+      toast.success(`Добро пожаловать, ${userName}!`, {
+        duration: 1500,
+        icon: "👋",
+      });
+
+      // Обновляем AuthContext
+      await checkAuth();
+
+      // Редирект в зависимости от роли пользователя и параметра redirect
+      const redirectTo = searchParams.get('redirect') || (result.user.role === 'admin' ? '/admin/admin_panel' : '/profile');
+      
+      // Небольшая задержка для обновления состояния, затем редирект
+      setTimeout(() => {
+        window.location.href = redirectTo;
+      }, 800);
+      
+      // Не сбрасываем isLoading, так как происходит редирект
+      
+    } catch (error: any) {
+      console.error("❌ Error logging in:", error);
+      
+      // Показываем уведомление об ошибке
+      toast.error("❌ Неверный email или пароль", {
+        duration: 4000,
+      });
+      
       setError(
-        "Ошибка входа. Пожалуйста, проверьте свои данные и попробуйте снова."
+        error.message || "Неверный email или пароль. Пожалуйста, проверьте свои данные и попробуйте снова."
       );
-    } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-28 lg:px-8">
+    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-28 lg:px-8 bg-gray-50">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <img
           className="mx-auto"
-          src="atom_black.svg"
+          src="/atom_black.svg"
           width={80}
           height={80}
-          alt="Your Company"
+          alt="Фонд СИНЕРГИЯ"
         />
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Вход в личный кабинет
         </h2>
+        <p className="mt-2 text-center text-sm text-gray-600">
+          Нет аккаунта?{" "}
+          <Link
+            href="/register"
+            className="font-semibold text-blue-600 hover:text-blue-500"
+          >
+            Зарегистрироваться
+          </Link>
+        </p>
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">

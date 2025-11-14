@@ -10,13 +10,18 @@ initDatabase().catch((err) => {
 export async function GET() {
   try {
     await initDatabase();
-    const news = await fetchNewsFromDatabase(); // Извлекаем новости из базы данных
-    await closeDatabase();
-    return NextResponse.json(news);
+    const news = await fetchNewsFromDatabase();
+    console.log("✅ API: Returning", news.length, "news items");
+    
+    // Возвращаем в формате { news: [...] } для совместимости
+    return NextResponse.json({ 
+      news,
+      total: news.length 
+    });
   } catch (err) {
-    console.error("Ошибка при получении новостей:", err);
+    console.error("❌ Ошибка при получении новостей:", err);
     return NextResponse.json(
-      { error: "Не удалось получить новости" },
+      { error: "Не удалось получить новости", news: [] },
       { status: 500 }
     );
   }

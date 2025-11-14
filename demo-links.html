@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Демонстрация поддержки ссылок</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .example {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #6f42c1;
+        }
+        .link {
+            color: #6f42c1;
+            text-decoration: underline;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .link:hover {
+            color: #5a32a3;
+        }
+        h2 {
+            color: #333;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #666;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Демонстрация поддержки ссылок в заголовках брошюр</h1>
+    
+    <div class="example">
+        <h2>Пример 1: Заголовок с ссылкой</h2>
+        <p>Текст заголовка: "Информационная брошюра для трудовых мигрантов https://vk.com/@fond_orientir-informacionnaya-broshura-dlya-trudovyh-migrantov"</p>
+        <h3>Результат отображения:</h3>
+        <div style="background: white; padding: 15px; border-radius: 5px;">
+            <h2 style="margin: 0; font-size: 24px; font-weight: bold;">
+                Информационная брошюра для трудовых мигрантов 
+                <a href="https://vk.com/@fond_orientir-informacionnaya-broshura-dlya-trudovyh-migrantov" 
+                   target="_blank" 
+                   class="link" 
+                   title="https://vk.com/@fond_orientir-informacionnaya-broshura-dlya-trudovyh-migrantov">
+                   vk.com...
+                </a>
+            </h2>
+        </div>
+    </div>
+
+    <div class="example">
+        <h2>Пример 2: Описание с ссылкой</h2>
+        <p>Текст описания: "Дорогие друзья! Мы рады сообщить, что в нашем сообществе появилась информационная брошюра, специально созданная для трудовых мигрантов! 💼🤝 по ссылке vk.com/@fond_orientir-infor..."</p>
+        <h3>Результат отображения:</h3>
+        <div style="background: white; padding: 15px; border-radius: 5px;">
+            <p style="margin: 0; font-size: 18px; color: #666;">
+                Дорогие друзья! Мы рады сообщить, что в нашем сообществе появилась информационная брошюра, специально созданная для трудовых мигрантов! 💼🤝 по ссылке 
+                <a href="vk.com/@fond_orientir-infor" 
+                   target="_blank" 
+                   class="link" 
+                   title="vk.com/@fond_orientir-infor">
+                   vk.com/@fond_orientir-infor
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <div class="example">
+        <h2>Возможности:</h2>
+        <ul>
+            <li>✅ Автоматическое распознавание ссылок в тексте</li>
+            <li>✅ Сокращение длинных ссылок для лучшего отображения</li>
+            <li>✅ Открытие ссылок в новой вкладке</li>
+            <li>✅ Красивое оформление в фиолетовом цвете</li>
+            <li>✅ Поддержка hover-эффектов</li>
+            <li>✅ Полная ссылка в tooltip при наведении</li>
+        </ul>
+    </div>
+</body>
+</html>

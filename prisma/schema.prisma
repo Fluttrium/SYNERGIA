@@ -1,0 +1,179 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model brochure_file_groups {
+  id          Int        @id @default(autoincrement())
+  brochure_id Int?
+  title       String
+  description String?
+  link        String?
+  brochures   brochures? @relation(fields: [brochure_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("brochure_file_groups")
+}
+
+model brochure_images {
+  id          Int        @id @default(autoincrement())
+  brochure_id Int?
+  image       Bytes?
+  filename    String?
+  group_id    Int?
+  brochures   brochures? @relation(fields: [brochure_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("brochure_images")
+}
+
+model brochure_pdfs {
+  id          Int        @id @default(autoincrement())
+  brochure_id Int?
+  pdf         Bytes?
+  filename    String?
+  group_id    Int?
+  brochures   brochures? @relation(fields: [brochure_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("brochure_pdfs")
+}
+
+model brochures {
+  id                   Int                    @id @default(autoincrement())
+  name                 String?
+  language             String?
+  description          String?
+  main_image           Bytes?
+  main_image_filename  String?
+  brochure_file_groups brochure_file_groups[]
+  brochure_images      brochure_images[]
+  brochure_pdfs        brochure_pdfs[]
+
+  @@map("brochures")
+}
+
+model buklet_file_groups {
+  id          Int      @id @default(autoincrement())
+  buklet_id   Int?
+  title       String
+  description String?
+  buklets     buklets? @relation(fields: [buklet_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("buklet_file_groups")
+}
+
+model buklet_images {
+  id        Int      @id @default(autoincrement())
+  buklet_id Int?
+  image     Bytes?
+  filename  String?
+  group_id  Int?
+  buklets   buklets? @relation(fields: [buklet_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("buklet_images")
+}
+
+model buklet_pdfs {
+  id        Int      @id @default(autoincrement())
+  buklet_id Int?
+  pdf       Bytes?
+  filename  String?
+  group_id  Int?
+  buklets   buklets? @relation(fields: [buklet_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("buklet_pdfs")
+}
+
+model buklets {
+  id                 Int                  @id @default(autoincrement())
+  name               String?
+  buklet_file_groups buklet_file_groups[]
+  buklet_images      buklet_images[]
+  buklet_pdfs        buklet_pdfs[]
+
+  @@map("buklets")
+}
+
+model housing_images {
+  id               Int              @id @default(autoincrement())
+  listing_id       Int
+  image            Bytes?
+  filename         String?
+  is_main          Boolean?         @default(false)
+  order_index      Int?             @default(0)
+  housing_listings housing_listings @relation(fields: [listing_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([listing_id])
+  @@map("housing_images")
+}
+
+model housing_listings {
+  id               Int              @id @default(autoincrement())
+  user_id          Int?
+  title            String
+  description      String?
+  housing_type     String
+  district         String
+  address          String?
+  price            Int
+  price_period     String?          @default("month")
+  rooms            Int?
+  area             Float?
+  floor            Int?
+  total_floors     Int?
+  amenities        String?          @default("[]")
+  contact_phone    String?
+  contact_email    String?
+  contact_telegram String?
+  status           String?          @default("pending")
+  is_featured      Boolean?         @default(false)
+  views            Int?             @default(0)
+  created_at       DateTime?        @default(now())
+  updated_at       DateTime?        @updatedAt
+  housing_images   housing_images[]
+  users            users?           @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([district], map: "idx_housing_district")
+  @@index([housing_type], map: "idx_housing_type")
+  @@index([status], map: "idx_housing_status")
+  @@index([user_id])
+  @@map("housing_listings")
+}
+
+model items {
+  id          Int     @id @default(autoincrement())
+  title       String?
+  description String?
+  image       Bytes?
+  link        String?
+  body        String?
+
+  @@map("items")
+}
+
+model project {
+  id          Int     @id @default(autoincrement())
+  title       String?
+  description String?
+  image       Bytes?
+  link        String?
+
+  @@map("project")
+}
+
+model users {
+  id               Int                @id @default(autoincrement())
+  username         String
+  password         String
+  role             String?            @default("user")
+  phone            String?
+  email            String?
+  name             String?
+  surname          String?
+  createdAt        DateTime?          @default(now())
+  housing_listings housing_listings[]
+
+  @@map("users")
+}

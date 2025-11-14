@@ -1,31 +1,27 @@
-import Footer from "@/components/ui/footer";
+import type { Metadata } from "next";
+import { Nunito_Sans } from "next/font/google";
+import "./(default)/globals.css";
+import { AuthProviderWrapper } from "@/components/providers/auth-provider-wrapper";
 
-import Header2 from "@/components/ui/header2";
-import { Jost } from "next/font/google";
+const font = Nunito_Sans({ subsets: ["cyrillic"] });
 
-const jost = Jost({
-  subsets: ["cyrillic"],
-});
-export const metadata = {
-  title: "Синергия",
+export const metadata: Metadata = {
+  title: "Фонд «СИНЕРГИЯ»",
+  description: "Фонд развития культурно-делового сотрудничества городов-побратимов Санкт-Петербурга «СИНЕРГИЯ»",
 };
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <html lang="en" className={jost.className}>
+    <html lang="ru">
       <head>
-        <link rel="icon" href="favicon/atom_blacck.ico" sizes="any" />
+        <link rel="icon" href="/favicon/atom_blacck.ico" />
       </head>
-      <body>
-        <div className="flex flex-col min-h-screen overflow-hidden">
-          <Header2 />
-          {children}
-          <Footer />
-        </div>
+      <body className={font.className}>
+        <AuthProviderWrapper>{children}</AuthProviderWrapper>
       </body>
     </html>
   );

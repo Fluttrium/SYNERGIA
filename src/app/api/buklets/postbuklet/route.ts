@@ -6,36 +6,68 @@ const db = new sqlite3.Database("./collection.db", sqlite3.OPEN_READWRITE);
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
-    const images = formData.getAll("images");
-    const pdfs = formData.getAll("pdfs");
     const name = formData.get("name") as string;
 
-    if (!images || images.length === 0 || !pdfs || pdfs.length === 0) {
+    console.log("Received buklet data:", { name });
+
+    if (!name) {
       return NextResponse.json(
-        { error: "Не было получено изображений или PDF файлов." },
+        { error: "Name is required" },
         { status: 400 }
       );
     }
 
-    const imageBuffers: Buffer[] = [];
-    const pdfBuffers: Buffer[] = [];
+    // Извлекаем группы файлов (такой же формат как для брошюр)
+    const fileGroups: Array<{
+      title: string;
+      description: string;
+      images: File[];
+      pdfs: File[];
+    }> = [];
 
-    for (let i = 0; i < images.length; i++) {
-      const file = images[i] as File;
-      const buffer = Buffer.from(await file.arrayBuffer());
-      imageBuffers.push(buffer);
+    let groupIndex = 0;
+    while (true) {
+      const groupTitle = formData.get(`group_${groupIndex}_title`) as string;
+      if (!groupTitle) break;
+
+      const groupDescription = formData.get(`group_${groupIndex}_description`) as string;
+      const groupImages = formData.getAll(`group_${groupIndex}_images`) as File[];
+      const groupPdfs = formData.getAll(`group_${groupIndex}_pdfs`) as File[];
+
+      // Фильтруем пустые файлы
+      const validImages = groupImages.filter(img => img.size > 0);
+      const validPdfs = groupPdfs.filter(pdf => pdf.size > 0);
+
+      if (validImages.length === 0 && validPdfs.length === 0) {
+        return NextResponse.json(
+          { error: `Группа файлов "${groupTitle}" должна содержать хотя бы один файл` },
+          { status: 400 }
+        );
+      }
+
+      fileGroups.push({
+        title: groupTitle,
+        description: groupDescription || '',
+        images: validImages,
+        pdfs: validPdfs
+      });
+
+      groupIndex++;
     }
 
-    for (let i = 0; i < pdfs.length; i++) {
-      const file = pdfs[i] as File;
-      const buffer = Buffer.from(await file.arrayBuffer());
-      pdfBuffers.push(buffer);
+    if (fileGroups.length === 0) {
+      return NextResponse.json(
+        { error: "Необходимо добавить хотя бы одну группу файлов" },
+        { status: 400 }
+      );
     }
 
-    const bukletId = await addBuklet(name, imageBuffers, pdfBuffers);
+    console.log(`Processing ${fileGroups.length} file groups for buklet`);
+
+    const bukletId = await addBukletWithGroups(name, fileGroups);
 
     return NextResponse.json({
-      message: "Успешно",
+      message: "Буклет успешно добавлен",
       bukletId,
       status: 201,
     });
@@ -49,73 +81,119 @@ export async function POST(req: NextRequest) {
   }
 }
 
-async function addBuklet(
+async function addBukletWithGroups(
   name: string,
-  images: Buffer[],
-  pdfs: Buffer[]
+  fileGroups: Array<{
+    title: string;
+    description: string;
+    images: File[];
+    pdfs: File[];
+  }>
 ): Promise<number> {
-  const insertBukletSql = `INSERT INTO buklets (name) VALUES (?)`;
-
-  return new Promise<number>((resolve, reject) => {
-    db.run(insertBukletSql, [name], function (err) {
-      if (err) {
-        console.error("Ошибка при вставке буклета:", err.message);
-        reject(err);
-        return;
-      }
-
-      const bukletId = this.lastID;
-
-      const insertImageSql = `INSERT INTO buklet_images (buklet_id, image) VALUES (?, ?)`;
-      const insertPdfSql = `INSERT INTO buklet_pdfs (buklet_id, pdf) VALUES (?, ?)`;
-
-      // вставка изщображения
-      let imageInsertCount = 0;
-      if (images.length > 0) {
-        images.forEach((image) => {
-          db.run(insertImageSql, [bukletId, image], function (err) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      db.serialize(async () => {
+        // Вставляем основную информацию о буклете
+        db.run(
+          "INSERT INTO buklets (name) VALUES (?)",
+          [name],
+          async function (err) {
             if (err) {
-              console.error("Ошибка при вставке изображения:", err.message);
+              console.error("Error inserting buklet:", err);
               reject(err);
               return;
             }
-            imageInsertCount++;
-            if (imageInsertCount === images.length && pdfs.length === 0) {
-              resolve(bukletId);
-            }
-          });
-        });
-      } else {
-        imageInsertCount = images.length;
-      }
+            const bukletId = this.lastID;
+            console.log(`Inserted buklet with ID: ${bukletId}`);
 
-      // вставка пдф в таблицу
+            let completedGroups = 0;
+            const totalGroups = fileGroups.length;
 
-      let pdfInsertCount = 0;
-      if (pdfs.length > 0) {
-        pdfs.forEach((pdf) => {
-          db.run(insertPdfSql, [bukletId, pdf], function (err) {
-            if (err) {
-              console.error("Ошибка при вставке PDF:", err.message);
-              reject(err);
-              return;
-            }
-            pdfInsertCount++;
-            if (
-              pdfInsertCount === pdfs.length &&
-              imageInsertCount === images.length
-            ) {
-              resolve(bukletId);
-            }
-          });
-        });
-      } else {
-        pdfInsertCount = pdfs.length;
-      }
+            const checkCompletion = () => {
+              completedGroups++;
+              if (completedGroups === totalGroups) {
+                console.log(`Buklet ${bukletId} completed with ${fileGroups.length} groups`);
+                resolve(bukletId);
+              }
+            };
 
-      if (images.length === 0 && pdfs.length === 0) {
-        resolve(bukletId);
-      }
-    });
+            // Обрабатываем каждую группу файлов
+            for (let groupIndex = 0; groupIndex < fileGroups.length; groupIndex++) {
+              const group = fileGroups[groupIndex];
+              
+              // Вставляем информацию о группе файлов
+              db.run(
+                "INSERT INTO buklet_file_groups (buklet_id, title, description) VALUES (?, ?, ?)",
+                [bukletId, group.title, group.description],
+                async function (err) {
+                  if (err) {
+                    console.error(`Error inserting file group ${groupIndex + 1}:`, err);
+                    reject(err);
+                    return;
+                  }
+                  const groupId = this.lastID;
+
+                  let completedFiles = 0;
+                  const totalFiles = group.images.length + group.pdfs.length;
+
+                  const checkGroupCompletion = () => {
+                    completedFiles++;
+                    if (completedFiles === totalFiles) {
+                      checkCompletion();
+                    }
+                  };
+
+                  // Вставляем изображения группы
+                  for (let imgIndex = 0; imgIndex < group.images.length; imgIndex++) {
+                    const imageFile = group.images[imgIndex];
+                    const imageBuffer = Buffer.from(await imageFile.arrayBuffer());
+                    
+                    db.run(
+                      "INSERT INTO buklet_images (buklet_id, group_id, image, filename) VALUES (?, ?, ?, ?)",
+                      [bukletId, groupId, imageBuffer, imageFile.name],
+                      function (err) {
+                        if (err) {
+                          console.error(`Error inserting image ${imgIndex + 1} in group ${groupIndex + 1}:`, err);
+                          reject(err);
+                          return;
+                        }
+                        checkGroupCompletion();
+                      }
+                    );
+                  }
+
+                  // Вставляем PDF файлы группы
+                  for (let pdfIndex = 0; pdfIndex < group.pdfs.length; pdfIndex++) {
+                    const pdfFile = group.pdfs[pdfIndex];
+                    const pdfBuffer = Buffer.from(await pdfFile.arrayBuffer());
+                    
+                    db.run(
+                      "INSERT INTO buklet_pdfs (buklet_id, group_id, pdf, filename) VALUES (?, ?, ?, ?)",
+                      [bukletId, groupId, pdfBuffer, pdfFile.name],
+                      function (err) {
+                        if (err) {
+                          console.error(`Error inserting PDF ${pdfIndex + 1} in group ${groupIndex + 1}:`, err);
+                          reject(err);
+                          return;
+                        }
+                        checkGroupCompletion();
+                      }
+                    );
+                  }
+
+                  // Если в группе нет файлов
+                  if (totalFiles === 0) {
+                    checkGroupCompletion();
+                  }
+                }
+              );
+            }
+          }
+        );
+      });
+    } catch (error) {
+      console.error("Error in addBukletWithGroups:", error);
+      reject(error);
+    }
   });
 }

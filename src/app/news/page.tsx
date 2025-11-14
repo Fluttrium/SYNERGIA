@@ -8,7 +8,7 @@ export const revalidate = 0; // отключение кэширования
 export default async function NewsSection() {
   await initDatabase();
 
-  let news: NewsType[] = []; // Укажите тип для переменной news
+  let news: NewsType[] = [];
 
   try {
     news = await fetchNewsFromDatabase();
@@ -18,7 +18,7 @@ export default async function NewsSection() {
 
   return (
     <div>
-      <News initialBlogs={news} />
+      <News initialBlogs={news} showLimited={false} />
     </div>
   );
 }
