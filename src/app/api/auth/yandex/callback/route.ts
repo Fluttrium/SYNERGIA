@@ -86,13 +86,14 @@ export async function GET(request: NextRequest) {
     }
 
     // Создание JWT токена
+    const secret = new TextEncoder().encode('your_secret_key');
     const token = await new SignJWT({
       username: user.id || user.username,
       role: user.role || "user",
     })
       .setProtectedHeader({ alg: "HS256" })
       .setExpirationTime("24h")
-      .sign(Buffer.from("your_secret_key"));
+      .sign(secret);
 
     // Редирект на главную с установкой cookie
     const response = NextResponse.redirect(new URL("/", request.url));
