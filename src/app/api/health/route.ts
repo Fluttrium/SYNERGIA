@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
 export async function GET() {
   try {
-    // Проверяем подключение к базе данных
-    const { initDatabase } = await import('@/db/db');
-    await initDatabase();
+    // Проверяем подключение к базе данных через Prisma
+    await prisma.$queryRaw`SELECT 1`;
     
     return NextResponse.json(
       { 

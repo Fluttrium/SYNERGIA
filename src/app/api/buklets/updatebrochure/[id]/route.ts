@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import sqlite3 from "sqlite3";
-
-const db = new sqlite3.Database("./collection.db", sqlite3.OPEN_READWRITE);
+import { prisma } from "@/lib/prisma";
 
 export async function PUT(
   req: NextRequest,
@@ -93,52 +91,32 @@ async function updateBrochureWithGroups(
     pdfs: File[];
   }>
 ): Promise<void> {
-  return new Promise(async (resolve, reject) => {
-    try {
-      // Подготавливаем данные для основной картинки
-      let mainImageBuffer = null;
-      let mainImageFilename = null;
-      
-      if (mainImage && mainImage.size > 0) {
-        mainImageBuffer = Buffer.from(await mainImage.arrayBuffer());
-        mainImageFilename = mainImage.name;
-      }
-
-      // Обновляем основную информацию о брошюре
-      const updateSql = mainImageBuffer 
-        ? "UPDATE brochures SET name = ?, main_image = ?, main_image_filename = ? WHERE id = ?"
-        : "UPDATE brochures SET name = ? WHERE id = ?";
-      
-      const updateParams = mainImageBuffer 
-        ? [name, mainImageBuffer, mainImageFilename, brochureId]
-        : [name, brochureId];
-
-      db.run(updateSql, updateParams, async function (err) {
-        if (err) {
-          console.error("Error updating brochure:", err);
-          reject(err);
-          return;
-        }
-
-        try {
-          // Удаляем старые группы файлов и связанные файлы
-          await deleteBrochureFileGroups(brochureId);
-
-          // Добавляем новые группы файлов
-          await addFileGroupsToBrochure(brochureId, fileGroups);
-          
-          console.log(`Brochure ${brochureId} updated successfully`);
-          resolve();
-        } catch (error) {
-          console.error("Error updating file groups:", error);
-          reject(error);
-        }
-      });
-    } catch (error) {
-      console.error("Error in updateBrochureWithGroups:", error);
-      reject(error);
+  try {
+    // Подготавливаем данные для основной картинки
+    const updateData: any = { name };
+    
+    if (mainImage && mainImage.size > 0) {
+      updateData.main_image = Buffer.from(await mainImage.arrayBuffer());
+      updateData.main_image_filename = mainImage.name;
     }
-  });
+
+    // Обновляем основную информацию о брошюре
+    await prisma.brochures.update({
+      where: { id: brochureId },
+      data: updateData
+    });
+
+    // Удаляем старые группы файлов и связанные файлы
+    await deleteBrochureFileGroups(brochureId);
+
+    // Добавляем новые группы файлов
+    await addFileGroupsToBrochure(brochureId, fileGroups);
+    
+    console.log(`Brochure ${brochureId} updated successfully`);
+  } catch (error) {
+    console.error("Error in updateBrochureWithGroups:", error);
+    throw error;
+  }
 }
 
 async function addFileGroupsToBrochure(
@@ -151,136 +129,71 @@ async function addFileGroupsToBrochure(
     pdfs: File[];
   }>
 ): Promise<void> {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let completedGroups = 0;
-      const totalGroups = fileGroups.length;
-
-      if (totalGroups === 0) {
-        resolve();
-        return;
-      }
-
-      const checkCompletion = () => {
-        completedGroups++;
-        if (completedGroups === totalGroups) {
-          resolve();
+  try {
+    // Обрабатываем каждую группу файлов
+    for (const group of fileGroups) {
+      // Создаем группу файлов
+      const fileGroup = await prisma.brochure_file_groups.create({
+        data: {
+          brochure_id: brochureId,
+          title: group.title,
+          description: group.description || null,
+          link: group.link || null
         }
-      };
+      });
 
-      // Обрабатываем каждую группу файлов
-      for (let groupIndex = 0; groupIndex < fileGroups.length; groupIndex++) {
-        const group = fileGroups[groupIndex];
-        
-        // Вставляем информацию о группе файлов
-        db.run(
-          "INSERT INTO brochure_file_groups (brochure_id, title, description, link) VALUES (?, ?, ?, ?)",
-          [brochureId, group.title, group.description, group.link],
-          async function (err) {
-            if (err) {
-              console.error(`Error inserting file group ${groupIndex + 1}:`, err);
-              reject(err);
-              return;
-            }
-            const groupId = this.lastID;
+      const groupId = fileGroup.id;
 
-            try {
-              // Вставляем изображения группы
-              for (let imgIndex = 0; imgIndex < group.images.length; imgIndex++) {
-                const imageFile = group.images[imgIndex];
-                const imageBuffer = Buffer.from(await imageFile.arrayBuffer());
-                
-                db.run(
-                  "INSERT INTO brochure_images (brochure_id, group_id, image, filename) VALUES (?, ?, ?, ?)",
-                  [brochureId, groupId, imageBuffer, imageFile.name],
-                  function (err) {
-                    if (err) {
-                      console.error(`Error inserting image ${imgIndex + 1} in group ${groupIndex + 1}:`, err);
-                      reject(err);
-                      return;
-                    }
-                  }
-                );
-              }
-
-              // Вставляем PDF файлы группы
-              for (let pdfIndex = 0; pdfIndex < group.pdfs.length; pdfIndex++) {
-                const pdfFile = group.pdfs[pdfIndex];
-                const pdfBuffer = Buffer.from(await pdfFile.arrayBuffer());
-                
-                db.run(
-                  "INSERT INTO brochure_pdfs (brochure_id, group_id, pdf, filename) VALUES (?, ?, ?, ?)",
-                  [brochureId, groupId, pdfBuffer, pdfFile.name],
-                  function (err) {
-                    if (err) {
-                      console.error(`Error inserting PDF ${pdfIndex + 1} in group ${groupIndex + 1}:`, err);
-                      reject(err);
-                      return;
-                    }
-                  }
-                );
-              }
-
-              checkCompletion();
-            } catch (error) {
-              console.error("Error processing files for group:", error);
-              reject(error);
-            }
+      // Вставляем изображения группы
+      for (const imageFile of group.images) {
+        const imageBuffer = Buffer.from(await imageFile.arrayBuffer());
+        await prisma.brochure_images.create({
+          data: {
+            brochure_id: brochureId,
+            group_id: groupId,
+            image: imageBuffer,
+            filename: imageFile.name
           }
-        );
+        });
       }
-    } catch (error) {
-      console.error("Error in addFileGroupsToBrochure:", error);
-      reject(error);
+
+      // Вставляем PDF файлы группы
+      for (const pdfFile of group.pdfs) {
+        const pdfBuffer = Buffer.from(await pdfFile.arrayBuffer());
+        await prisma.brochure_pdfs.create({
+          data: {
+            brochure_id: brochureId,
+            group_id: groupId,
+            pdf: pdfBuffer,
+            filename: pdfFile.name
+          }
+        });
+      }
     }
-  });
+  } catch (error) {
+    console.error("Error in addFileGroupsToBrochure:", error);
+    throw error;
+  }
 }
 
 async function deleteBrochureFileGroups(brochureId: number): Promise<void> {
-  return new Promise((resolve, reject) => {
-    try {
-      // Удаляем все связанные файлы и группы для брошюры
-      db.run(
-        "DELETE FROM brochure_images WHERE brochure_id = ?",
-        [brochureId],
-        (err) => {
-          if (err) {
-            console.error("Error deleting brochure images:", err);
-            reject(err);
-            return;
-          }
+  try {
+    // Удаляем все связанные файлы и группы для брошюры
+    await prisma.brochure_images.deleteMany({
+      where: { brochure_id: brochureId }
+    });
 
-          db.run(
-            "DELETE FROM brochure_pdfs WHERE brochure_id = ?",
-            [brochureId],
-            (err) => {
-              if (err) {
-                console.error("Error deleting brochure PDFs:", err);
-                reject(err);
-                return;
-              }
+    await prisma.brochure_pdfs.deleteMany({
+      where: { brochure_id: brochureId }
+    });
 
-              db.run(
-                "DELETE FROM brochure_file_groups WHERE brochure_id = ?",
-                [brochureId],
-                (err) => {
-                  if (err) {
-                    console.error("Error deleting brochure file groups:", err);
-                    reject(err);
-                    return;
-                  }
-                  
-                  console.log(`Deleted all file groups for brochure ${brochureId}`);
-                  resolve();
-                }
-              );
-            }
-          );
-        }
-      );
-    } catch (error) {
-      console.error("Error in deleteBrochureFileGroups:", error);
-      reject(error);
-    }
-  });
+    await prisma.brochure_file_groups.deleteMany({
+      where: { brochure_id: brochureId }
+    });
+
+    console.log(`Deleted all file groups for brochure ${brochureId}`);
+  } catch (error) {
+    console.error("Error in deleteBrochureFileGroups:", error);
+    throw error;
+  }
 }

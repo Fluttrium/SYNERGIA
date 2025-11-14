@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import sqlite3 from "sqlite3";
-
-const db = new sqlite3.Database("./collection.db", sqlite3.OPEN_READWRITE);
+import { prisma } from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
   try {
@@ -90,110 +88,61 @@ async function addBukletWithGroups(
     pdfs: File[];
   }>
 ): Promise<number> {
-  return new Promise(async (resolve, reject) => {
-    try {
-      db.serialize(async () => {
-        // Вставляем основную информацию о буклете
-        db.run(
-          "INSERT INTO buklets (name) VALUES (?)",
-          [name],
-          async function (err) {
-            if (err) {
-              console.error("Error inserting buklet:", err);
-              reject(err);
-              return;
-            }
-            const bukletId = this.lastID;
-            console.log(`Inserted buklet with ID: ${bukletId}`);
+  try {
+    // Создаем буклет
+    const buklet = await prisma.buklets.create({
+      data: {
+        name
+      }
+    });
 
-            let completedGroups = 0;
-            const totalGroups = fileGroups.length;
+    const bukletId = buklet.id;
+    console.log(`Inserted buklet with ID: ${bukletId}`);
 
-            const checkCompletion = () => {
-              completedGroups++;
-              if (completedGroups === totalGroups) {
-                console.log(`Buklet ${bukletId} completed with ${fileGroups.length} groups`);
-                resolve(bukletId);
-              }
-            };
-
-            // Обрабатываем каждую группу файлов
-            for (let groupIndex = 0; groupIndex < fileGroups.length; groupIndex++) {
-              const group = fileGroups[groupIndex];
-              
-              // Вставляем информацию о группе файлов
-              db.run(
-                "INSERT INTO buklet_file_groups (buklet_id, title, description) VALUES (?, ?, ?)",
-                [bukletId, group.title, group.description],
-                async function (err) {
-                  if (err) {
-                    console.error(`Error inserting file group ${groupIndex + 1}:`, err);
-                    reject(err);
-                    return;
-                  }
-                  const groupId = this.lastID;
-
-                  let completedFiles = 0;
-                  const totalFiles = group.images.length + group.pdfs.length;
-
-                  const checkGroupCompletion = () => {
-                    completedFiles++;
-                    if (completedFiles === totalFiles) {
-                      checkCompletion();
-                    }
-                  };
-
-                  // Вставляем изображения группы
-                  for (let imgIndex = 0; imgIndex < group.images.length; imgIndex++) {
-                    const imageFile = group.images[imgIndex];
-                    const imageBuffer = Buffer.from(await imageFile.arrayBuffer());
-                    
-                    db.run(
-                      "INSERT INTO buklet_images (buklet_id, group_id, image, filename) VALUES (?, ?, ?, ?)",
-                      [bukletId, groupId, imageBuffer, imageFile.name],
-                      function (err) {
-                        if (err) {
-                          console.error(`Error inserting image ${imgIndex + 1} in group ${groupIndex + 1}:`, err);
-                          reject(err);
-                          return;
-                        }
-                        checkGroupCompletion();
-                      }
-                    );
-                  }
-
-                  // Вставляем PDF файлы группы
-                  for (let pdfIndex = 0; pdfIndex < group.pdfs.length; pdfIndex++) {
-                    const pdfFile = group.pdfs[pdfIndex];
-                    const pdfBuffer = Buffer.from(await pdfFile.arrayBuffer());
-                    
-                    db.run(
-                      "INSERT INTO buklet_pdfs (buklet_id, group_id, pdf, filename) VALUES (?, ?, ?, ?)",
-                      [bukletId, groupId, pdfBuffer, pdfFile.name],
-                      function (err) {
-                        if (err) {
-                          console.error(`Error inserting PDF ${pdfIndex + 1} in group ${groupIndex + 1}:`, err);
-                          reject(err);
-                          return;
-                        }
-                        checkGroupCompletion();
-                      }
-                    );
-                  }
-
-                  // Если в группе нет файлов
-                  if (totalFiles === 0) {
-                    checkGroupCompletion();
-                  }
-                }
-              );
-            }
-          }
-        );
+    // Обрабатываем каждую группу файлов
+    for (const group of fileGroups) {
+      // Создаем группу файлов
+      const fileGroup = await prisma.buklet_file_groups.create({
+        data: {
+          buklet_id: bukletId,
+          title: group.title,
+          description: group.description || null
+        }
       });
-    } catch (error) {
-      console.error("Error in addBukletWithGroups:", error);
-      reject(error);
+
+      const groupId = fileGroup.id;
+
+      // Вставляем изображения группы
+      for (const imageFile of group.images) {
+        const imageBuffer = Buffer.from(await imageFile.arrayBuffer());
+        await prisma.buklet_images.create({
+          data: {
+            buklet_id: bukletId,
+            group_id: groupId,
+            image: imageBuffer,
+            filename: imageFile.name
+          }
+        });
+      }
+
+      // Вставляем PDF файлы группы
+      for (const pdfFile of group.pdfs) {
+        const pdfBuffer = Buffer.from(await pdfFile.arrayBuffer());
+        await prisma.buklet_pdfs.create({
+          data: {
+            buklet_id: bukletId,
+            group_id: groupId,
+            pdf: pdfBuffer,
+            filename: pdfFile.name
+          }
+        });
+      }
     }
-  });
+
+    console.log(`Buklet ${bukletId} completed with ${fileGroups.length} groups`);
+    return bukletId;
+  } catch (error) {
+    console.error("Error in addBukletWithGroups:", error);
+    throw error;
+  }
 }
