@@ -85,7 +85,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="relative h-screen overflow-hidden">
+    <section className="relative h-screen overflow-hidden bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900">
       {/* Fallback градиент пока видео загружается */}
       {!videoLoaded && !videoError && (
         <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 z-0"></div>
@@ -117,8 +117,7 @@ const Hero = () => {
               }
             }}
             onLoadedMetadata={() => {
-              // Метаданные загружены, начинаем загрузку данных
-              setVideoLoaded(true);
+              // Метаданные загружены, но не помечаем как загруженное до полной готовности
             }}
             onError={(e) => {
               console.error("Ошибка загрузки видео:", e);
