@@ -18,40 +18,40 @@ export default function Footer() {
         </div>
         {/* Одна колонка для маленьких экранов */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:col-span-2 md:pr-40 md:gap-8">
-          <div className="footer-column flex flex-col items-center md:items-start">
+          <div className="footer-column flex flex-col items-center md:items-start gap-1">
             <p className="text-xl font-bold pb-2">Карта сайта</p>
-            <Link href="/" passHref className="text-sm cursor-pointer mb-1">
-              <span>Главная</span>
+            <Link href="/" className="text-sm cursor-pointer block mb-1">
+              Главная
             </Link>
-            <Link href="/news" passHref className="text-sm cursor-pointer mb-1">
-              <span>Новости</span>
+            <Link href="/news" className="text-sm cursor-pointer block mb-1">
+              Новости
             </Link>
-            <Link href="/towns" passHref className="text-sm cursor-pointer mb-1">
-              <span>Города-побратимы</span>
+            <Link href="/towns" className="text-sm cursor-pointer block mb-1">
+              Города-побратимы
             </Link>
           </div>
-          <div className="footer-column flex flex-col items-center md:items-start">
+          <div className="footer-column flex flex-col items-center md:items-start gap-1">
             <p className="text-xl font-bold pb-2">Фонд</p>
-            <Link href="/aim" passHref className="text-sm cursor-pointer mb-1">
-              <span>Цели и задачи</span>
+            <Link href="/aim" className="text-sm cursor-pointer block mb-1">
+              Цели и задачи
             </Link>
-            <Link href="/reports" passHref className="text-sm cursor-pointer mb-1">
-              <span>Отчеты</span>
+            <Link href="/reports" className="text-sm cursor-pointer block mb-1">
+              Отчеты
             </Link>
-            <Link href="/requisites" passHref className="text-sm cursor-pointer mb-1">
-              <span>Реквизиты</span>
+            <Link href="/requisites" className="text-sm cursor-pointer block mb-1">
+              Реквизиты
             </Link>
           </div>
-          <div className="footer-column flex flex-col items-center md:items-start">
+          <div className="footer-column flex flex-col items-center md:items-start gap-1">
             <p className="text-xl font-bold pb-2">Информация</p>
-            <Link href="/history" passHref className="text-sm cursor-pointer mb-1">
-              <span>История</span>
+            <Link href="/history" className="text-sm cursor-pointer block mb-1">
+              История
             </Link>
-            <Link href="/culture" passHref className="text-sm cursor-pointer mb-1">
-              <span>Культура</span>
+            <Link href="/culture" className="text-sm cursor-pointer block mb-1">
+              Культура
             </Link>
-            <Link href="/economics" passHref className="text-sm cursor-pointer mb-1">
-              <span>Экономика</span>
+            <Link href="/economics" className="text-sm cursor-pointer block mb-1">
+              Экономика
             </Link>
           </div>
         </div>
