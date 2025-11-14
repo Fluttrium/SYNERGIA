@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import sqlite3 from "sqlite3";
-
-const db = new sqlite3.Database("./collection.db", sqlite3.OPEN_READWRITE);
+import { prisma } from "@/lib/prisma";
 
 export const revalidate = 0; // отключение кэширования
 
@@ -21,57 +19,40 @@ export async function GET(req: NextRequest) {
   }
 }
 
-function getBuklets(): Promise<any[]> {
-  const sql = `
-    SELECT id, name
-    FROM buklets
-  `;
-
-  return new Promise((resolve, reject) => {
-    db.all(sql, [], (err, rows) => {
-      if (err) {
-        console.error("Ошибка при выполнении запроса буклетов:", err.message);
-        reject(err);
-      } else {
-        resolve(rows || []);
+async function getBrochures(): Promise<any[]> {
+  try {
+    const brochures = await prisma.brochures.findMany({
+      orderBy: [
+        { language: 'asc' },
+        { name: 'asc' }
+      ],
+      select: {
+        id: true,
+        name: true,
+        language: true,
+        main_image: true,
+        main_image_filename: true
       }
     });
-  });
-}
 
-function getBrochures(): Promise<any[]> {
-  const sql = `
-    SELECT id, name, language, main_image, main_image_filename
-    FROM brochures
-    ORDER BY language, name
-  `;
+    return brochures.map((brochure) => {
+      const result: any = {
+        id: brochure.id,
+        name: brochure.name,
+        language: brochure.language,
+        type: 'brochure'
+      };
 
-  return new Promise((resolve, reject) => {
-    db.all(sql, [], (err, rows) => {
-      if (err) {
-        console.error("Ошибка при выполнении запроса брошюр:", err.message);
-        reject(err);
-      } else {
-        // Обрабатываем результаты и добавляем base64 изображения
-        const processedRows = (rows || []).map((row: any) => {
-          const result: any = {
-            id: row.id,
-            name: row.name,
-            language: row.language,
-            type: 'brochure'
-          };
-
-          // Добавляем основную картинку если она есть
-          if (row.main_image) {
-            result.mainImage = `data:image/jpeg;base64,${row.main_image.toString('base64')}`;
-            result.mainImageFilename = row.main_image_filename;
-          }
-
-          return result;
-        });
-
-        resolve(processedRows);
+      // Добавляем основную картинку если она есть
+      if (brochure.main_image) {
+        result.mainImage = `data:image/jpeg;base64,${Buffer.from(brochure.main_image).toString('base64')}`;
+        result.mainImageFilename = brochure.main_image_filename;
       }
+
+      return result;
     });
-  });
+  } catch (error: any) {
+    console.error("Ошибка при выполнении запроса брошюр:", error);
+    throw error;
+  }
 }

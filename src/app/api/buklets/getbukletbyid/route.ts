@@ -1,14 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import sqlite3 from "sqlite3";
-
-const db = new sqlite3.Database("./collection.db", sqlite3.OPEN_READWRITE);
-
-interface BukletRow {
-  id: number;
-  name: string;
-  images: string | null;
-  pdfs: string | null;
-}
+import { prisma } from "@/lib/prisma";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(req.url);
@@ -22,87 +13,63 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   }
 
   try {
-            // Сначала проверяем, есть ли буклет с таким ID
-            let bukletSql = `
-              SELECT 
-                buklets.id, 
-                buklets.name
-              FROM buklets
-              WHERE buklets.id = ?;
-            `;
-
-    const bukletRows: BukletRow[] = await new Promise((resolve, reject) => {
-      db.all<BukletRow>(bukletSql, [Number(id)], (err, rows) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(rows);
-        }
-      });
+    // Сначала проверяем, есть ли буклет с таким ID
+    const buklet = await prisma.buklets.findUnique({
+      where: { id: Number(id) },
+      select: {
+        id: true,
+        name: true
+      }
     });
 
-            if (bukletRows.length > 0) {
-              const buklet = bukletRows[0];
-              
-              // Получаем группы файлов для этого буклета
-              const fileGroups = await getBukletFileGroups(Number(id));
-              
-              const result = {
-                id: buklet.id,
-                name: buklet.name,
-                type: 'buklet',
-                fileGroups: fileGroups
-              };
-              return NextResponse.json(result, { status: 200 });
-            }
+    if (buklet) {
+      // Получаем группы файлов для этого буклета
+      const fileGroups = await getBukletFileGroups(Number(id));
+      
+      const result = {
+        id: buklet.id,
+        name: buklet.name,
+        type: 'buklet',
+        fileGroups: fileGroups
+      };
+      return NextResponse.json(result, { status: 200 });
+    }
 
-            // Если буклет не найден, проверяем брошюры
-            let brochureSql = `
-              SELECT 
-                brochures.id, 
-                brochures.name,
-                brochures.language,
-                brochures.description,
-                brochures.main_image,
-                brochures.main_image_filename
-              FROM brochures
-              WHERE brochures.id = ?;
-            `;
-
-    const brochureRows: any[] = await new Promise((resolve, reject) => {
-      db.all(brochureSql, [Number(id)], (err, rows) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(rows);
-        }
-      });
+    // Если буклет не найден, проверяем брошюры
+    const brochure = await prisma.brochures.findUnique({
+      where: { id: Number(id) },
+      select: {
+        id: true,
+        name: true,
+        language: true,
+        description: true,
+        main_image: true,
+        main_image_filename: true
+      }
     });
 
-            if (brochureRows.length > 0) {
-              const brochure = brochureRows[0];
-              
-              // Получаем группы файлов для этой брошюры
-              const fileGroups = await getBrochureFileGroups(Number(id));
-              
-              // Подготавливаем основную картинку
-              let mainImageData = null;
-              if (brochure.main_image) {
-                mainImageData = `data:image/jpeg;base64,${brochure.main_image.toString('base64')}`;
-              }
-              
-              const result = {
-                id: brochure.id,
-                name: brochure.name,
-                language: brochure.language,
-                description: brochure.description,
-                mainImage: mainImageData,
-                mainImageFilename: brochure.main_image_filename,
-                type: 'brochure',
-                fileGroups: fileGroups
-              };
-              return NextResponse.json(result, { status: 200 });
-            }
+    if (brochure) {
+      // Получаем группы файлов для этой брошюры
+      const fileGroups = await getBrochureFileGroups(Number(id));
+      
+      // Подготавливаем основную картинку
+      let mainImageData = null;
+      if (brochure.main_image) {
+        mainImageData = `data:image/jpeg;base64,${Buffer.from(brochure.main_image).toString('base64')}`;
+      }
+      
+      const result = {
+        id: brochure.id,
+        name: brochure.name,
+        language: brochure.language,
+        description: brochure.description,
+        mainImage: mainImageData,
+        mainImageFilename: brochure.main_image_filename,
+        type: 'brochure',
+        fileGroups: fileGroups
+      };
+      return NextResponse.json(result, { status: 200 });
+    }
 
     return NextResponse.json({ error: "Item not found" }, { status: 404 });
   } catch (error: any) {
@@ -115,111 +82,106 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 }
 
 async function getBukletFileGroups(bukletId: number): Promise<any[]> {
-  return new Promise((resolve, reject) => {
-    const groupsSql = `
-      SELECT 
-        fg.id,
-        fg.title,
-        fg.description,
-        (
-          SELECT json_group_array(
-            json_object(
-              'id', img.id,
-              'filename', img.filename,
-              'data', 'data:image/jpeg;base64,' || hex(img.image)
-            )
-          )
-          FROM buklet_images img
-          WHERE img.group_id = fg.id
-        ) as images,
-        (
-          SELECT json_group_array(
-            json_object(
-              'id', pdf.id,
-              'filename', pdf.filename,
-              'data', 'data:application/pdf;base64,' || hex(pdf.pdf)
-            )
-          )
-          FROM buklet_pdfs pdf
-          WHERE pdf.group_id = fg.id
-        ) as pdfs
-      FROM buklet_file_groups fg
-      WHERE fg.buklet_id = ?
-      ORDER BY fg.id;
-    `;
-
-    db.all(groupsSql, [bukletId], (err, rows) => {
-      if (err) {
-        console.error("Error getting buklet file groups:", err);
-        reject(err);
-        return;
-      }
-
-      const groups = rows.map((row: any) => ({
-        id: row.id,
-        title: row.title,
-        description: row.description,
-        images: row.images ? JSON.parse(row.images) : [],
-        pdfs: row.pdfs ? JSON.parse(row.pdfs) : []
-      }));
-
-      resolve(groups);
+  try {
+    const groups = await prisma.buklet_file_groups.findMany({
+      where: { buklet_id: bukletId },
+      orderBy: { id: 'asc' }
     });
-  });
+
+    const fileGroups = await Promise.all(
+      groups.map(async (group) => {
+        const images = await prisma.buklet_images.findMany({
+          where: { group_id: group.id },
+          select: {
+            id: true,
+            filename: true,
+            image: true
+          }
+        });
+
+        const pdfs = await prisma.buklet_pdfs.findMany({
+          where: { group_id: group.id },
+          select: {
+            id: true,
+            filename: true,
+            pdf: true
+          }
+        });
+
+        return {
+          id: group.id,
+          title: group.title,
+          description: group.description,
+          images: images.map((img) => ({
+            id: img.id,
+            filename: img.filename,
+            data: img.image ? `data:image/jpeg;base64,${Buffer.from(img.image).toString('base64')}` : null
+          })),
+          pdfs: pdfs.map((pdf) => ({
+            id: pdf.id,
+            filename: pdf.filename,
+            data: pdf.pdf ? `data:application/pdf;base64,${Buffer.from(pdf.pdf).toString('base64')}` : null
+          }))
+        };
+      })
+    );
+
+    return fileGroups;
+  } catch (error: any) {
+    console.error("Error getting buklet file groups:", error);
+    throw error;
+  }
 }
 
-        async function getBrochureFileGroups(brochureId: number): Promise<any[]> {
-          return new Promise((resolve, reject) => {
-            const groupsSql = `
-              SELECT 
-                fg.id,
-                fg.title,
-                fg.description,
-                fg.link,
-                (
-                  SELECT json_group_array(
-                    json_object(
-                      'id', img.id,
-                      'filename', img.filename,
-                      'data', 'data:image/jpeg;base64,' || hex(img.image)
-                    )
-                  )
-                  FROM brochure_images img
-                  WHERE img.group_id = fg.id
-                ) as images,
-                (
-                  SELECT json_group_array(
-                    json_object(
-                      'id', pdf.id,
-                      'filename', pdf.filename,
-                      'data', 'data:application/pdf;base64,' || hex(pdf.pdf)
-                    )
-                  )
-                  FROM brochure_pdfs pdf
-                  WHERE pdf.group_id = fg.id
-                ) as pdfs
-              FROM brochure_file_groups fg
-              WHERE fg.brochure_id = ?
-              ORDER BY fg.id;
-            `;
+async function getBrochureFileGroups(brochureId: number): Promise<any[]> {
+  try {
+    const groups = await prisma.brochure_file_groups.findMany({
+      where: { brochure_id: brochureId },
+      orderBy: { id: 'asc' }
+    });
 
-            db.all(groupsSql, [brochureId], (err, rows) => {
-              if (err) {
-                console.error("Error getting brochure file groups:", err);
-                reject(err);
-                return;
-              }
+    const fileGroups = await Promise.all(
+      groups.map(async (group) => {
+        const images = await prisma.brochure_images.findMany({
+          where: { group_id: group.id },
+          select: {
+            id: true,
+            filename: true,
+            image: true
+          }
+        });
 
-              const groups = rows.map((row: any) => ({
-                id: row.id,
-                title: row.title,
-                description: row.description,
-                link: row.link,
-                images: row.images ? JSON.parse(row.images) : [],
-                pdfs: row.pdfs ? JSON.parse(row.pdfs) : []
-              }));
+        const pdfs = await prisma.brochure_pdfs.findMany({
+          where: { group_id: group.id },
+          select: {
+            id: true,
+            filename: true,
+            pdf: true
+          }
+        });
 
-              resolve(groups);
-            });
-          });
-        }
+        return {
+          id: group.id,
+          title: group.title,
+          description: group.description,
+          link: group.link,
+          images: images.map((img) => ({
+            id: img.id,
+            filename: img.filename,
+            data: img.image ? `data:image/jpeg;base64,${Buffer.from(img.image).toString('base64')}` : null
+          })),
+          pdfs: pdfs.map((pdf) => ({
+            id: pdf.id,
+            filename: pdf.filename,
+            data: pdf.pdf ? `data:application/pdf;base64,${Buffer.from(pdf.pdf).toString('base64')}` : null
+          }))
+        };
+      })
+    );
+
+    return fileGroups;
+  } catch (error: any) {
+    console.error("Error getting brochure file groups:", error);
+    throw error;
+  }
+}

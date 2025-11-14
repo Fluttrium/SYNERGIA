@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import sqlite3 from "sqlite3";
-
-const db = new sqlite3.Database("./collection.db", sqlite3.OPEN_READWRITE);
+import { prisma } from "@/lib/prisma";
 
 export async function DELETE(req: NextRequest) {
   try {
@@ -16,34 +14,25 @@ export async function DELETE(req: NextRequest) {
     }
 
     // Удаляем связанные изображения и PDF
-    await new Promise<void>((resolve, reject) => {
-      db.serialize(() => {
-        // Удаляем изображения
-        db.run("DELETE FROM brochure_images WHERE brochure_id = ?", [id], (err) => {
-          if (err) {
-            console.error("Error deleting brochure images:", err);
-          }
-        });
-
-        // Удаляем PDF
-        db.run("DELETE FROM brochure_pdfs WHERE brochure_id = ?", [id], (err) => {
-          if (err) {
-            console.error("Error deleting brochure PDFs:", err);
-          }
-        });
-
-        // Удаляем основную запись
-        db.run("DELETE FROM brochures WHERE id = ?", [id], function (err) {
-          if (err) {
-            console.error("Error deleting brochure:", err);
-            reject(err);
-          } else {
-            console.log(`Brochure with ID ${id} deleted successfully`);
-            resolve();
-          }
-        });
-      });
+    await prisma.brochure_images.deleteMany({
+      where: { brochure_id: Number(id) }
     });
+
+    await prisma.brochure_pdfs.deleteMany({
+      where: { brochure_id: Number(id) }
+    });
+
+    // Удаляем группы файлов
+    await prisma.brochure_file_groups.deleteMany({
+      where: { brochure_id: Number(id) }
+    });
+
+    // Удаляем основную запись
+    await prisma.brochures.delete({
+      where: { id: Number(id) }
+    });
+
+    console.log(`Brochure with ID ${id} deleted successfully`);
 
     return NextResponse.json(
       { message: "Brochure deleted successfully" },
