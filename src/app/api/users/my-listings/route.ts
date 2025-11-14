@@ -3,6 +3,8 @@ import { jwtVerify } from "jose";
 import { prisma } from "@/lib/prisma";
 import { getUserById, giveUser, initDatabase } from "@/db/db";
 
+export const dynamic = 'force-dynamic';
+export const runtime = "nodejs";
 export const revalidate = 0;
 
 export async function GET(req: NextRequest) {

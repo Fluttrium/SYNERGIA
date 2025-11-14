@@ -2,6 +2,9 @@ import { NextResponse, NextRequest } from "next/server";
 import { createUser, giveUser, initDatabase } from "@/db/db";
 import { SignJWT } from "jose";
 
+export const dynamic = 'force-dynamic';
+export const runtime = "nodejs";
+
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
