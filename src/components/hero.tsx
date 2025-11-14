@@ -27,70 +27,52 @@ const Hero = () => {
     return () => clearInterval(intervalId);
   }, [text]);
 
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
-    // Убеждаемся, что видео начинает воспроизведение
     const video = videoRef.current;
-    if (video) {
-      // Убираем все контролы и настройки для автовоспроизведения
-      video.controls = false;
-      video.removeAttribute('controls');
-      video.setAttribute('playsinline', 'true');
-      video.setAttribute('webkit-playsinline', 'true');
-      video.setAttribute('x-webkit-airplay', 'deny');
-      
-      // Убеждаемся, что контролы отключены
-      video.removeAttribute('controls');
-      
-      const handleCanPlay = async () => {
-        setVideoLoaded(true);
-        try {
-          await video.play();
-          // Убираем паузу, если видео было приостановлено
-          if (video.paused) {
-            video.play();
-          }
-        } catch (error: any) {
-          console.error("Ошибка воспроизведения видео:", error);
-          // Не устанавливаем ошибку, если это просто политика автовоспроизведения
-          if (error.name !== 'NotAllowedError' && error.name !== 'NotSupportedError') {
-            setVideoError(true);
-          }
+    if (!video) return;
+
+    // Убираем все атрибуты контролов
+    video.removeAttribute('controls');
+    video.controls = false;
+    
+    // Скрываем overlay кнопку через CSS
+    const hideOverlay = () => {
+      const style = document.createElement('style');
+      style.id = 'hide-video-overlay';
+      style.textContent = `
+        video::-webkit-media-controls-overlay-play-button {
+          display: none !important;
+          opacity: 0 !important;
+          visibility: hidden !important;
+          pointer-events: none !important;
+          width: 0 !important;
+          height: 0 !important;
         }
-      };
-
-      const handleError = () => {
-        console.error("Ошибка загрузки видео");
-        setVideoError(true);
-      };
-
-      const handlePlay = () => {
-        setVideoLoaded(true);
-      };
-
-      video.addEventListener('canplay', handleCanPlay);
-      video.addEventListener('canplaythrough', handleCanPlay);
-      video.addEventListener('error', handleError);
-      video.addEventListener('play', handlePlay);
-
-      // Пытаемся загрузить и воспроизвести видео
-      video.load();
-      
-      // Пытаемся воспроизвести после небольшой задержки
-      setTimeout(() => {
-        if (video.readyState >= 2) {
-          video.play().catch(console.error);
+        video::-webkit-media-controls-overlay-enclosure {
+          display: none !important;
+          opacity: 0 !important;
+          visibility: hidden !important;
         }
-      }, 100);
+      `;
+      if (!document.getElementById('hide-video-overlay')) {
+        document.head.appendChild(style);
+      }
+    };
+    
+    hideOverlay();
 
-      return () => {
-        video.removeEventListener('canplay', handleCanPlay);
-        video.removeEventListener('canplaythrough', handleCanPlay);
-        video.removeEventListener('error', handleError);
-        video.removeEventListener('play', handlePlay);
-      };
-    }
+    // Пытаемся запустить видео
+    const tryPlay = async () => {
+      try {
+        await video.play();
+      } catch (err) {
+        console.warn("Автоплей заблокирован:", err);
+      }
+    };
+    
+    tryPlay();
   }, []);
 
   return (
@@ -99,34 +81,31 @@ const Hero = () => {
         <>
           <video
             ref={videoRef}
-            className="absolute inset-0 w-full h-full object-cover blur-sm z-0 pointer-events-none"
+            className="absolute inset-0 w-full h-full object-cover blur-sm z-0"
             src="/spbvideo.mp4"
-            autoPlay
             muted
+            autoPlay
             loop
             playsInline
             preload="auto"
             disablePictureInPicture
-            disableRemotePlayback
+            controls={false}
             style={{
-              objectFit: 'cover',
+              objectFit: "cover",
+              pointerEvents: "none",
             }}
+            onContextMenu={(e) => e.preventDefault()}
             onError={(e) => {
               console.error("Ошибка загрузки видео:", e);
               setVideoError(true);
             }}
             onLoadedData={() => {
-              console.log("Видео загружено успешно");
               setVideoLoaded(true);
-              if (videoRef.current) {
-                videoRef.current.play().catch(console.error);
-              }
+              videoRef.current?.play().catch(() => {});
             }}
             onCanPlay={() => {
               setVideoLoaded(true);
-              if (videoRef.current) {
-                videoRef.current.play().catch(console.error);
-              }
+              videoRef.current?.play().catch(() => {});
             }}
             onPlay={() => {
               setVideoLoaded(true);
@@ -135,11 +114,6 @@ const Hero = () => {
         </>
       ) : (
         <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 z-0"></div>
-      )}
-      
-      {/* Fallback градиент пока видео загружается */}
-      {!videoLoaded && !videoError && (
-        <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 z-0 animate-pulse"></div>
       )}
 
       <div className="relative z-20 h-full flex items-center justify-center text-center text-white px-4 md:px-20">
