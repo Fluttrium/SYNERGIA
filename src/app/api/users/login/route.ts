@@ -4,6 +4,7 @@ import { SignJWT } from "jose";
 import bcrypt from "bcrypt";
 
 export const runtime = "nodejs";
+export const dynamic = 'force-dynamic';
 
 interface LoginRequest {
   username: string;

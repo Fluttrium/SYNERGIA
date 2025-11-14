@@ -2,6 +2,9 @@ import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { jwtVerify } from "jose";
 
+export const dynamic = 'force-dynamic';
+export const runtime = "nodejs";
+
 export async function GET(request: NextRequest) {
   try {
     const tokenCookie = request.cookies.get("token");
