@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { SignJWT } from "jose";
 import bcrypt from "bcrypt";
 
+export const runtime = "nodejs";
+
 interface LoginRequest {
   username: string;
   password: string;
@@ -10,6 +12,15 @@ interface LoginRequest {
 
 export async function POST(request: NextRequest) {
   try {
+    // Проверяем наличие DATABASE_URL
+    if (!process.env.DATABASE_URL) {
+      console.error('DATABASE_URL is not configured');
+      return NextResponse.json(
+        { message: "Server configuration error. Database not configured." },
+        { status: 503 }
+      );
+    }
+
     const { username, password } = (await request.json()) as LoginRequest;
 
     if (!username || !password) {
@@ -96,10 +107,22 @@ export async function POST(request: NextRequest) {
     });
 
     return response;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error during login:", error);
+    
+    // Проверяем, не связана ли ошибка с подключением к БД
+    if (error?.message?.includes('DATABASE_URL') || error?.code === 'P1001') {
+      return NextResponse.json(
+        { message: "Database connection error. Please check server configuration." },
+        { status: 503 }
+      );
+    }
+    
     return NextResponse.json(
-      { message: "Internal server error" },
+      { 
+        message: "Internal server error",
+        error: process.env.NODE_ENV === 'development' ? error?.message : undefined
+      },
       { status: 500 }
     );
   }
