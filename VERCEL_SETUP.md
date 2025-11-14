@@ -59,11 +59,34 @@ https://ваш-домен.vercel.app/api/health
 postgresql://user:password@host.timeweb.cloud:5432/database_name?sslmode=require
 ```
 
+**Важно:** Если в пароле есть специальные символы (!, ;, @, # и т.д.), их нужно URL-кодировать:
+- `!` → `%21`
+- `;` → `%3B`
+- `@` → `%40`
+- `#` → `%23`
+
+Пример с URL-кодированием:
+```
+postgresql://gen_user:std%21Y8XUk-RF%3BV@185.211.170.182:5432/default_db?sslmode=require
+```
+
 Где:
-- `user` - имя пользователя БД
-- `password` - пароль БД
-- `host.timeweb.cloud` - хост сервера
-- `5432` - порт PostgreSQL (обычно 5432)
-- `database_name` - имя базы данных
-- `?sslmode=require` - обязательное SSL соединение
+- `gen_user` - имя пользователя БД
+- `std%21Y8XUk-RF%3BV` - пароль (где %21 = !, %3B = ;)
+- `185.211.170.182` - IP адрес сервера
+- `5432` - порт PostgreSQL
+- `default_db` - имя базы данных
+- `?sslmode=require` - обязательное SSL соединение (рекомендуется добавить)
+
+## Ваша строка подключения
+
+Ваша строка подключения:
+```
+postgresql://gen_user:std%21Y8XUk-RF%3BV@185.211.170.182:5432/default_db
+```
+
+**Рекомендуется добавить SSL:**
+```
+postgresql://gen_user:std%21Y8XUk-RF%3BV@185.211.170.182:5432/default_db?sslmode=require
+```
 
